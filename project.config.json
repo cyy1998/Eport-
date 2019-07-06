@@ -1,0 +1,62 @@
+{
+	"description": "项目配置文件",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": true,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"autoAudits": false,
+		"coverView": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.7.0",
+	"appid": "wx03df9583418847c8",
+	"projectname": "%E4%BD%93%E8%82%B2%E5%99%A8%E6%9D%90%E6%8A%A5%E4%BF%AE",
+	"debugOptions": {
+		"hidedInDevtools": []
+	},
+	"isGameTourist": false,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 1,
+			"list": [
+				{
+					"id": 0,
+					"name": "mode1",
+					"pathName": "pages/login/login",
+					"query": "deviceID=001",
+					"scene": 1047
+				},
+				{
+					"id": 1,
+					"name": "mode2",
+					"pathName": "pages/login/login",
+					"query": "",
+					"scene": 1001
+				}
+			]
+		}
+	}
+}

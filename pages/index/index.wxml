@@ -1,0 +1,11 @@
+<!--index.wxml-->
+<view>
+  <i-row>
+    <i-col span="12">当前器材编号：</i-col>
+    <i-col span="12">{{device}}</i-col>
+  </i-row>
+</view>
+<i-tab-bar current="{{ current }}" bindchange="handleChange" fixed="true">
+    <i-tab-bar-item key="homepage" icon="homepage" current-icon="homepage_fill" title="主页"></i-tab-bar-item>
+    <i-tab-bar-item key="brush" icon="brush" current-icon="brush_fill" title="新建报单"></i-tab-bar-item>
+</i-tab-bar>
