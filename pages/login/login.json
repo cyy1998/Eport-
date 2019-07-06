@@ -2,8 +2,8 @@
   "usingComponents": {
     "i-row": "../../dist/row/index",
     "i-col": "../../dist/col/index",
-    "i-button": "../../dist/button/index",
-    "i-input": "../../dist/input/index"
+    "i-icon": "../../dist/icon/index"
+
 
   }
 }

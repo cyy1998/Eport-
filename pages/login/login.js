@@ -1,5 +1,5 @@
 // pages/login.js
-const app = getApp()
+const app = getApp();
 Page({
 
   /**
@@ -8,14 +8,24 @@ Page({
   data: {
     StatusBar: app.globalData.StatusBar,
     CustomBar: app.globalData.CustomBar,
-    Custom: app.globalData.Custom
+    Custom: app.globalData.Custom,
+    device: null,
+    is_password: true,
+    eye_status: 'browse',
+    animation: '',
+    error_message: '',
+    show_error: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    var query = options['deviceID'];
+    console.log(query)
+    this.setData({
+      device: query
+    });
   },
 
   /**
@@ -67,8 +77,61 @@ Page({
 
   },
 
-  formSubmit: function(e)
-  {
-    console.log('已提交');
+  handleVisit: function () {
+    wx.navigateTo({
+      url: '../index/index?deviceID=' + this.data.device
+    });
+  },
+
+  formSubmit: function (e) {
+    console.log(e.detail.value);
+    if (e.detail.value['id'] === '') {
+      var that = this;
+      that.setData({
+        animation: 'shake',
+        error_message: '用户名不能为空',
+        show_error: true
+      });
+      setTimeout(function () {
+        that.setData({
+          animation: ''
+        })
+      }, 1000);
+    } else if (e.detail.value['password'] === '') {
+      var that = this;
+      that.setData({
+        animation: 'shake',
+        error_message: '密码不能为空',
+        show_error: true
+      });
+      setTimeout(function () {
+        that.setData({
+          animation: ''
+        })
+      }, 1000);
+    } else {
+      var that = this;
+      that.setData({
+        show_error: false
+      });
+      wx.redirectTo({
+        url: '../home/home'
+      });
+      
+    }
+  },
+  changeStatus: function () {
+    if (this.data.is_password) {
+      this.setData({
+        is_password: false,
+        eye_status: "browse_fill"
+      });
+    } else {
+      this.setData({
+        is_password: true,
+        eye_status: "browse"
+      });
+    }
   }
+  
 })

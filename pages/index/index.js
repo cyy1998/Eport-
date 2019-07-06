@@ -4,11 +4,12 @@ const app = getApp()
 
 Page({
   data: {
-    device: '000',
+    device: '',
     current: 'brush',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    imgList: [],
+    detail:''
   },
   handleChange ({ detail }) {
     this.setData({
@@ -18,7 +19,7 @@ Page({
   //事件处理函数
 
   onLoad: function (options) {
-    var query = options['deviceID']
+    var query = options['deviceID'];
     this.setData({
       device: query
     })
@@ -51,12 +52,38 @@ Page({
       })
     }
   },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
+  ChooseImage: function() {
+    wx.chooseImage({
+      count: 4, //默认9
+      sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album', 'camera'], //从相册选择
+      success: (res) => {
+        if (this.data.imgList.length != 0) {
+          this.setData({
+            imgList: this.data.imgList.concat(res.tempFilePaths)
+          })
+        } else {
+          this.setData({
+            imgList: res.tempFilePaths
+          })
+        }
+      }
+    });
+  },
+  ViewImage: function() {
+    wx.previewImage({
+      urls: this.data.imgList,
+      current: e.currentTarget.dataset.url
+    });
+  },
+  textareaInput: function(e)
+  {
     this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
+      detail: e.detail.value
+    });
+  },
+  confirm: function()
+  {
+    console.log(this.data.imgList)
   }
 })

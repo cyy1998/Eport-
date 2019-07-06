@@ -1,27 +1,66 @@
-<!--pages/login.wxml-->
-<cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
-	<view slot="backText">返回</view>
-	<view slot="content">健身器材管理</view>
-</cu-custom>
-<view class="login">
-    <form bind:submit="formSubmit">
-        <i-row>
-            <i-col span="24" style="text-align: center;">
-                <view class="solid-bottom text-xl padding">
-                    <text class="text-black text-bold">员工登陆</text>
+<!-- pages/login.wxml -->
+<scroll-view scroll-y class="scrollPage">
+    <view class="UCenter-bg">
+        
+        <view class="text-xxl">健 身 器 材 报 修</view>
+    </view>
+    <view class="login margin-left margin-right">
+        <form bind:submit="formSubmit">
+            <i-row>
+                <i-col span="24" style="text-align: center;">
+                    <view class="solids-bottom text-xxl padding">
+                        <text class="text-blue text-shadow text-bold">员工登陆</text>
+                    </view>
+                </i-col>
+            </i-row>
+            <i-row wx:if="{{show_error}}">
+                <i-col span="24">
+                    <view class="solids-bottom text-l padding">
+                        <text class="text-red text-shadow text-bold">{{error_message}}</text>
+                    </view>
+                </i-col>
+            </i-row>
+            <i-row>
+                <i-col span="24">
+                    <view class="cu-form-group solid-bottom">
+                        <input placeholder="账号" name="id" />
+                    </view>
+                </i-col>
+            </i-row>
+            <i-row>
+                <i-col span="24">
+                    <view class="cu-form-group solids-bottom">
+                        <input placeholder="密码" name="password" password="{{is_password}}" />
+                        <i-icon type="{{eye_status}}" size="24" bind:tap="changeStatus" />
+                    </view>
+                </i-col>
+            </i-row>
+            <view class="cu-modal {{modalName=='DialogModal1'?'show':''}}">
+                <view class="cu-dialog">
+                    <view class="cu-bar bg-white justify-end">
+                        <view class="action" bindtap="hideModal">
+                            <text class="cuIcon-close text-red"></text>
+                        </view>
+                    </view>
+                    <view class="padding-xl">Modal 内容。</view>
+                    <view class="cu-bar bg-white justify-end">
+                        <view class="action">
+                            <button class="cu-btn line-green text-green" bindtap="hideModal">
+                                取消
+                            </button>
+                            <button class="cu-btn bg-green margin-left" bindtap="hideModal">
+                                确定
+                            </button>
+                        </view>
+                    </view>
                 </view>
-            </i-col>
-        </i-row>
-        <i-row>
-            <i-col span="24"><i-input type="text" placeholder="用户名" /></i-col>
-        </i-row>
-        <i-row>
-            <i-col span="24"><i-input type="password" placeholder="密码" /></i-col>
-        </i-row>
-        <view class="padding flex flex-direction">
-        <button  class="cu-btn bg-blue lg" formType="submit">登陆</button>
-        <button bind:tap="handleVisit" class="cu-btn bg-green margin-tb-sm lg">我是路人</button>
-        </view>
-    </form>
-   
-</view>
+            </view>
+            <view class="padding flex flex-direction">
+                <button class="cu-btn bg-blue lg animation-{{animation=='shake'?'shake':''}}" formType="submit">
+                    登陆
+                </button>
+                <button bind:tap="handleVisit" class="cu-btn bg-green margin-tb-sm lg">我是路人</button>
+            </view>
+        </form>
+    </view>
+</scroll-view>

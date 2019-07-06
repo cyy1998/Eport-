@@ -14,7 +14,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.7.0",
-	"appid": "wx03df9583418847c8",
+	"appid": "wx080d11b76304e3a0",
 	"projectname": "%E4%BD%93%E8%82%B2%E5%99%A8%E6%9D%90%E6%8A%A5%E4%BF%AE",
 	"debugOptions": {
 		"hidedInDevtools": []
@@ -53,8 +53,8 @@
 					"id": 1,
 					"name": "mode2",
 					"pathName": "pages/login/login",
-					"query": "",
-					"scene": 1001
+					"query": "deviceID=A03",
+					"scene": 1047
 				}
 			]
 		}

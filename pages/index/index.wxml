@@ -1,11 +1,62 @@
-<!--index.wxml-->
+<!-- index.wxml -->
+<cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">上传报修单</view>
+</cu-custom>
 <view>
   <i-row>
-    <i-col span="12">当前器材编号：</i-col>
-    <i-col span="12">{{device}}</i-col>
+    <view class=" text-xl padding">
+      <i-col span="12">
+        <text class="text-black text-bold">当前设备编号：</text>
+      </i-col>
+      <i-col span="12">
+        <text class="text-black text-bold">{{device}}</text>
+      </i-col>
+    </view>
   </i-row>
+  <view class="cu-bar bg-white margin-top">
+    <view class="action">图片上传</view>
+    <view class="action">{{imgList.length}}/4</view>
+  </view>
+  <view class="cu-form-group">
+    <view class="grid col-4 grid-square flex-sub">
+      <view class="bg-img" wx:for="{{imgList}}" wx:key="{{index}}" bindtap="ViewImage" data-url="{{imgList[index]}}">
+        <image src='{{imgList[index]}}' mode='aspectFill' />
+        <view class="cu-tag bg-red" catchtap="DelImg" data-index="{{index}}">
+          <text class="cuIcon-close" />
+        </view>
+      </view>
+      <view class="solids" bindtap="ChooseImage" wx:if="{{imgList.length<4}}">
+        <text class="cuIcon-cameraadd" />
+      </view>
+    </view>
+  </view>
+  <i-row>
+    <view class=" text-l padding">
+      <i-col span="24">
+        <text class="text-gray text-bold">问题描述：</text>
+      </i-col>
+    </view>
+  </i-row>
+  <view class="cu-form-group margin-top">
+    <textarea maxlength="400" style="height: 400rpx;" bindinput="textareaInput" placeholder="不要超过400字~" />
+  </view>
+  <i-row>
+    <view class=" text-l padding">
+      <i-col span="24">
+        <text class="text-gray text-bold">联系方式：</text>
+      </i-col>
+    </view>
+  </i-row>
+  <view class="cu-form-group margin-top">
+    <view class="title">手机号码</view>
+    <input placeholder=""></input>
+    <view class="cu-capsule radius">
+      <view class="cu-tag bg-blue">+86</view>
+      <view class="cu-tag line-blue">中国大陆</view>
+    </view>
+  </view>
+  <view class="padding flex flex-direction">
+    <button bind:tap="confirm" class="cu-btn bg-green margin-tb-sm lg">确认提交</button>
+  </view>
 </view>
-<i-tab-bar current="{{ current }}" bindchange="handleChange" fixed="true">
-    <i-tab-bar-item key="homepage" icon="homepage" current-icon="homepage_fill" title="主页"></i-tab-bar-item>
-    <i-tab-bar-item key="brush" icon="brush" current-icon="brush_fill" title="新建报单"></i-tab-bar-item>
-</i-tab-bar>
