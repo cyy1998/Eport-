@@ -84,9 +84,9 @@ Page({
   },
 
   formSubmit: function (e) {
+    var that = this;
     console.log(e.detail.value);
     if (e.detail.value['id'] === '') {
-      var that = this;
       that.setData({
         animation: 'shake',
         error_message: '用户名不能为空',
@@ -98,7 +98,6 @@ Page({
         })
       }, 1000);
     } else if (e.detail.value['password'] === '') {
-      var that = this;
       that.setData({
         animation: 'shake',
         error_message: '密码不能为空',
@@ -110,12 +109,14 @@ Page({
         })
       }, 1000);
     } else {
-      var that = this;
+      var id='10086';
+      var name='abc';
+      var type='巡检员';
       that.setData({
         show_error: false
       });
       wx.redirectTo({
-        url: '../home/home'
+        url: '../home/home?id='+id+'&name='+name+'&type='+type+'&deviceID='+that.data.device
       });
       
     }

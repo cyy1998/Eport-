@@ -8,9 +8,14 @@ App({
         this.globalData.Custom = custom;  
         this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
       }
-    })
+    });
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    loginStatus: false,
+    id: '',
+    name: '',
+    type: '',
   }
+  
 })

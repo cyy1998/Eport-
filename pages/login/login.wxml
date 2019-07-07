@@ -1,22 +1,21 @@
 <!-- pages/login.wxml -->
 <scroll-view scroll-y class="scrollPage">
-    <view class="UCenter-bg">
-        
-        <view class="text-xxl">健 身 器 材 报 修</view>
+    <view class="UCenter-bg">       
+        <view class="text-xsl text-red">健 ♂ 身</view>
     </view>
     <view class="login margin-left margin-right">
         <form bind:submit="formSubmit">
             <i-row>
                 <i-col span="24" style="text-align: center;">
-                    <view class="solids-bottom text-xxl padding">
+                    <view class="text-xxl padding">
                         <text class="text-blue text-shadow text-bold">员工登陆</text>
                     </view>
                 </i-col>
             </i-row>
             <i-row wx:if="{{show_error}}">
                 <i-col span="24">
-                    <view class="solids-bottom text-l padding">
-                        <text class="text-red text-shadow text-bold">{{error_message}}</text>
+                    <view class="text-sm padding-sm">
+                        <text class="text-red text-shadow">{{error_message}}</text>
                     </view>
                 </i-col>
             </i-row>
@@ -34,27 +33,7 @@
                         <i-icon type="{{eye_status}}" size="24" bind:tap="changeStatus" />
                     </view>
                 </i-col>
-            </i-row>
-            <view class="cu-modal {{modalName=='DialogModal1'?'show':''}}">
-                <view class="cu-dialog">
-                    <view class="cu-bar bg-white justify-end">
-                        <view class="action" bindtap="hideModal">
-                            <text class="cuIcon-close text-red"></text>
-                        </view>
-                    </view>
-                    <view class="padding-xl">Modal 内容。</view>
-                    <view class="cu-bar bg-white justify-end">
-                        <view class="action">
-                            <button class="cu-btn line-green text-green" bindtap="hideModal">
-                                取消
-                            </button>
-                            <button class="cu-btn bg-green margin-left" bindtap="hideModal">
-                                确定
-                            </button>
-                        </view>
-                    </view>
-                </view>
-            </view>
+            </i-row>            
             <view class="padding flex flex-direction">
                 <button class="cu-btn bg-blue lg animation-{{animation=='shake'?'shake':''}}" formType="submit">
                     登陆

@@ -1,5 +1,24 @@
-<!--pages/home/home.wxml-->
-
+<!-- pages/home/home.wxml -->
+<view class="UCenter-bg">
+    <view class="text-xl">
+       {{name}}
+    <text class="text-df">{{id}}</text>        
+    </view>
+    <view class="margin-top-sm">
+       <text class="text-df">{{type}}</text>
+    </view>
+    <view class="margin-top-sm">
+       <button class="cu-btn round bg-gray" bind:tap="quit">注销</button>
+    </view>
+    <image src="https://image.weilanwl.com/gif/wave.gif" mode="scaleToFill" class="gif-wave"></image>
+</view>
+<swiper class="card-swiper square-dot" indicator-dots="true" circular="true" autoplay="false" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
+  <swiper-item wx:for="{{swiperList}}" wx:key class="{{cardCur==index?'cur':''}}">
+    <view class="swiper-item">
+      <view class="bg-white" style="width: 500rpx; height: 400rpx;">aaa</view>
+    </view>
+  </swiper-item>
+</swiper>
 <i-tab-bar current="{{ current }}" bindchange="handleChange" fixed="true">
     <i-tab-bar-item key="homepage" icon="homepage" current-icon="homepage_fill" title="主页"></i-tab-bar-item>
     <i-tab-bar-item key="brush" icon="brush" current-icon="brush_fill" title="新建报单"></i-tab-bar-item>

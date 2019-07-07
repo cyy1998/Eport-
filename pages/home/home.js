@@ -5,14 +5,28 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    id: '',
+    name: '',
+    type: '',
+    device: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    var _id=options['id'];
+    var _name=options['name'];
+    var _type=options['type'];
+    var _device=options['deviceID'];
+    console.log(_id+_name+_type);
+    this.setData({
+      id: _id,
+      name: _name,
+      type: _type,
+      device: _device,
+      swiperList: [1,2,3,4,5]
+    })
   },
 
   /**
@@ -62,5 +76,11 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  quit: function() {
+    wx.reLaunch({
+      url: '../login/login?deviceID='+this.data.device
+    });
   }
 })
