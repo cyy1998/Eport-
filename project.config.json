@@ -48,7 +48,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": -1,
 			"list": [
 				{
 					"id": 0,
@@ -66,10 +66,10 @@
 				},
 				{
 					"id": -1,
-					"name": "mode2",
-					"pathName": "pages/login/login",
-					"query": "deviceID=A03",
-					"scene": 1001
+					"name": "mode3",
+					"pathName": "pages/home/home",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
