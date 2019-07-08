@@ -71,15 +71,26 @@
     <view class="cu-bar bg-white justify-end">
       <view class="content">设备编号：{{device}}</view>
     </view>
+    <view class="" style="text-align: left">现场图片：</view>
+    <view class="cu-form-group">
+      <view class="grid col-4 grid-square flex-sub">
+        <view class="bg-img"  style="text-align: left" wx:for="{{imgList}}" wx:key="{{index}}" bindtap="ViewImage" data-url="{{imgList[index]}}">
+          <image src="{{imgList[index]}}" mode="aspectFill" />
+        </view>
+      </view>
+    </view>
+    <view class="padding-sm" style="text-align: left">问题描述：</view>
+    <view class="padding-lr-sm" style="text-align: left">{{detail}}</view>
+    <view class="padding-sm" style="text-align: left">联系人：{{phone}}</view>
     <view class="cu-bar bg-white justify-end">
       <view class="action">
         <button class="cu-btn line-green text-green" bind:tap="hideInformation">取消</button>
-        <button class="cu-btn bg-green margin-left" bindtap="hideModal">编辑</button>
+        <button class="cu-btn bg-green margin-left" bind:tap="Edit">编辑</button>
       </view>
     </view>
   </view>
 </view>
 <i-tab-bar current="{{ current }}" bindchange="handleChange" fixed="true">
   <i-tab-bar-item key="homepage" icon="homepage" current-icon="homepage_fill" title="主页"></i-tab-bar-item>
-  <i-tab-bar-item key="brush" icon="brush" current-icon="brush_fill" title="扫码"></i-tab-bar-item>
+  <i-tab-bar-item key="brush" icon="scan" current-icon="brush_fill" title="扫码"></i-tab-bar-item>
 </i-tab-bar>

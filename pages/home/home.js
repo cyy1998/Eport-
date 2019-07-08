@@ -24,7 +24,7 @@ Page({
     device: '',
     detail: '',
     phone: '',
-    imgURL: [],
+    imgList: [],
     showInfo: false
   },
 
@@ -78,7 +78,8 @@ Page({
       lis.push({
         'device': i.toString(),
         'detail': '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-        'phone': '123456'
+        'phone': '123456',
+        'url': ['https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg','https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg','https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg','https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
       });
     }
     this.setData({
@@ -248,6 +249,9 @@ Page({
     var id=e.currentTarget.dataset.id;
     this.setData({
       device: this.data.swiperList[id]['device'],
+      detail: this.data.swiperList[id]['detail'],
+      phone: this.data.swiperList[id]['phone'],
+      imgList: this.data.swiperList[id]['url'],
       showInfo: true
     });
   },
@@ -256,5 +260,17 @@ Page({
     this.setData({
       showInfo: false
     })
+  },
+  ViewImage: function (e) {
+    wx.previewImage({
+      urls: this.data.imgList,
+      current: e.currentTarget.dataset.url
+    });
+  },
+  Edit: function()
+  {
+    wx.navigateTo({
+      url: '../index/index?deviceID='+this.data.device+'&phone='+this.data.phone+'&detail='+this.data.detail
+    });
   }
 })
