@@ -18,7 +18,14 @@ Page({
     eye_status: 'browse',
     animation: '',
     error_message: '',
-    show_error: false
+    show_error: false,
+    swiperList: [],
+    cardCur: 0,
+    device: '',
+    detail: '',
+    phone: '',
+    imgURL: [],
+    showInfo: false
   },
 
   /**
@@ -65,6 +72,18 @@ Page({
         isLogin: app.globalData.loginStatus
       });
     }
+    var lis=[]
+    for(var i=0; i<5; ++i)
+    {
+      lis.push({
+        'device': i.toString(),
+        'detail': '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
+        'phone': '123456'
+      });
+    }
+    this.setData({
+      swiperList: lis
+    });
   },
 
   /**
@@ -220,4 +239,22 @@ Page({
       });
     }
   },
+  cardSwiper(e) {
+    this.setData({
+      cardCur: e.detail.current
+    })
+  },
+  showInformation: function(e){
+    var id=e.currentTarget.dataset.id;
+    this.setData({
+      device: this.data.swiperList[id]['device'],
+      showInfo: true
+    });
+  },
+  hideInformation: function(){
+
+    this.setData({
+      showInfo: false
+    })
+  }
 })

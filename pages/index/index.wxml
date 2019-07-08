@@ -66,7 +66,7 @@
     <view class="cu-form-group">
       <view class="grid col-4 grid-square flex-sub">
         <view class="bg-img" wx:for="{{imgList}}" wx:key="{{index}}" bindtap="ViewImage" data-url="{{imgList[index]}}">
-          <image src='{{imgList[index]}}' mode='aspectFill' />
+          <image src="{{imgList[index]}}" mode='aspectFill' />
           <view class="cu-tag bg-red" catchtap="DelImg" data-index="{{index}}">
             <text class="cuIcon-close" />
           </view>
@@ -91,7 +91,7 @@
       </i-col>
     </i-row>
     <view hidden="{{modalName=='DrawerModal'}}" class="cu-form-group margin-top-sm">
-      <textarea name="problem" maxlength="200" style="height: 200rpx;" bindinput="textareaInput" placeholder="不要超过200字~" />
+      <textarea value="{{detail_init}}" name="problem" maxlength="200" style="height: 200rpx;" bindinput="textareaInput" placeholder="不要超过200字~" />
     </view>
     <view hidden="{{modalName!='DrawerModal'}}" class="cu-form-group margin-top-sm">
       <view class="margin-tb" style="height: 200rpx; word-break: break-all;">{{detail}}</view>
@@ -112,7 +112,7 @@
     </i-row>
     <view class="cu-form-group margin-top-sm">
       <view class="title">手机号码</view>
-      <input name="phone" type="number" placeholder="" bindinput="phoneNumber"></input>
+      <input name="phone" value="{{phone_init}}" type="number" placeholder="" bindinput="phoneNumber"></input>
       <view class="cu-capsule radius">
         <view class="cu-tag bg-blue">+86</view>
         <view class="cu-tag line-blue">中国大陆</view>
@@ -143,11 +143,12 @@
         <i-col span="24">
           <text class="text-gray text-bold">需求配件：</text>
           <view class="cu-list menu margin-top-sm card-menu">
-            <view class="cu-item cu-form-group" wx:for="{{accessories}}" wx:for-index="idx" wx:key>
+            <view class="cu-item cu-form-group" wx:for="{{index}}" wx:for-index="idx" wx:key>
               <picker name='picker{{idx}}' data-id="{{idx}}" bindchange="PickerChange" value="{{index[idx]}}" range="{{picker}}">
                 <view class="picker">{{index[idx]?picker[index[idx]]:'配件类型'}}</view>
               </picker>
               <i-input-number name="number{{idx}}" value="{{value[idx]}}" min="0" max="100" data-id="{{idx}}" bind:change="inputNumber" class="margin-left-sm"></i-input-number>
+              <text class="cuIcon-close margin-left-sm" data-id="{{idx}}" bind:tap="delPicker"></text>
             </view>
             <view class="cu-item text-center text-xl" style="align-items: center;" bind:tap="addAcc">
               <text></text>
@@ -159,12 +160,12 @@
       </view>
     </i-row>
   </view>
-  <view class="flex flex-direction" wx:if="{{isLogin&&step!='first'}}">
+  <view class="padding-lr-sm flex flex-direction" wx:if="{{isLogin&&step!='first'}}">
     <button bind:tap="prevStep" class="cu-btn bg-blue margin-top-sm lg animation-{{animation}}">
       上一步
     </button>
   </view>
-  <view class="flex flex-direction" wx:if="{{(isLogin&&step!='first')||(!isLogin&&step=='first')}}">
+  <view class="padding-lr-sm flex flex-direction" wx:if="{{(isLogin&&step!='first')||(!isLogin&&step=='first')}}">
     <button form-type="submit" class="cu-btn bg-green margin-tb-sm lg animation-{{animation}}">
       确认提交
     </button>
@@ -175,7 +176,7 @@
     </button>
   </view>
 </form>
-<view class="cu-modal {{showLogin?'show':''}}" wx:if="{{showLogin}}">
+<view class="cu-modal {{showLogin?'show':''}}">
   <view class="cu-dialog">
     <view>
       <view class="cu-bar bg-white justify-end">

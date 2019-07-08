@@ -18,10 +18,9 @@ Page({
     isLogin: false,
     showLogin: false,
     imgList: [],
-    accessories:[],
-    index:[],
-    value:[],
-    picker: ['GTX770','GTX780','GTX970','GTX980','GTX 1060'],
+    index: [],
+    value: [],
+    picker: ['GTX770', 'GTX780', 'GTX970', 'GTX980', 'GTX 1060'],
     step: 'first',
     detail: '',
     phone: '',
@@ -30,7 +29,9 @@ Page({
     eye_status: 'browse',
     animation: '',
     error_message: '',
-    show_error: false
+    show_error: false,
+    phone_init: '',
+    detail_init: '',
   },
   handleChange({
     detail
@@ -42,25 +43,35 @@ Page({
   //事件处理函数
 
   onLoad: function (options) {
-    var _device = options['deviceID'];
+    console.log(options);
+    var lis = [];
+    for(var i=1;i<5;++i)
+    {
+      if(options['url'+i.toString()]!='')
+      {
+        lis.push(options['url'+i.toString()]);
+      }
+    }
     this.setData({
-      device: _device
+      device: options['deviceID'],
+      phone_init: options['phone'],
+      detail_init: options['detail'],
+      phone: options['phone'],
+      detail: options['detail'],
+      imgList: lis
     });
     if (!app.globalData.loginStatus) {
-      var _id=wx.getStorageSync('id');
-      if(_id)
-      {
-        app.globalData.id=_id;
+      var _id = wx.getStorageSync('id');
+      if (_id) {
+        app.globalData.id = _id;
       }
-      var _name=wx.getStorageSync('name');
-      if(_name)
-      {
-        app.globalData.name=_name;
+      var _name = wx.getStorageSync('name');
+      if (_name) {
+        app.globalData.name = _name;
       }
-      var _type=wx.getStorageSync('type');
-      if(_type)
-      {
-        app.globalData.type=_type;
+      var _type = wx.getStorageSync('type');
+      if (_type) {
+        app.globalData.type = _type;
       }
       if (app.globalData.id != '') {
         app.globalData.loginStatus = true;
@@ -104,12 +115,14 @@ Page({
         }
       }
     });
+    console.log(this.data.imgList);
   },
-  ViewImage: function () {
+  ViewImage: function (e) {
     wx.previewImage({
       urls: this.data.imgList,
       current: e.currentTarget.dataset.url
     });
+
   },
   DelImg(e) {
     this.data.imgList.splice(e.currentTarget.dataset.index, 1);
@@ -174,28 +187,40 @@ Page({
         show_error_2: false,
         show_error_3: false
       });
+      for(var i=0; i<that.data.imgList.length;++i)
+      {
+
+        wx.uploadFile({
+          url: 'https://sm.ms/api/upload',
+          filePath: that.data.imgList[i],
+          name: 'smfile',
+          success: res=>{
+            console.log(res);
+          }
+        });
+      }
     }
   },
-  showModal: function(){
+  showModal: function () {
     this.setData({
       modalName: 'DrawerModal'
     });
   },
-  hideModal: function(){
+  hideModal: function () {
     this.setData({
       modalName: ''
     });
   },
-  login: function(){
+  login: function () {
     this.setData({
       showLogin: true
     });
   },
-  quit: function(){
-    app.globalData.loginStatus=false;
-    app.globalData.name='';
-    app.globalData.id='';
-    app.globalData.type='';
+  quit: function () {
+    app.globalData.loginStatus = false;
+    app.globalData.name = '';
+    app.globalData.id = '';
+    app.globalData.type = '';
     this.setData({
       isLogin: false,
       userName: '路人',
@@ -216,7 +241,7 @@ Page({
       data: ''
     });
   },
-  hideLogin: function(){
+  hideLogin: function () {
     this.setData({
       showLogin: false
     });
@@ -247,10 +272,10 @@ Page({
         })
       }, 1000);
     } else {
-      app.globalData.name=e.detail.value['id'];
-      app.globalData.id=e.detail.value['id'];
-      app.globalData.type='巡检员';
-      app.globalData.loginStatus=true;
+      app.globalData.name = e.detail.value['id'];
+      app.globalData.id = e.detail.value['id'];
+      app.globalData.type = '巡检员';
+      app.globalData.loginStatus = true;
       that.setData({
         show_error: false,
         showLogin: false,
@@ -262,8 +287,7 @@ Page({
       wx.setStorage({
         key: 'id',
         data: app.globalData.id,
-        success: function(res)
-        {
+        success: function (res) {
           console.log('yes');
         }
       });
@@ -290,9 +314,9 @@ Page({
       });
     }
   },
-  nextStep: function() {
+  nextStep: function () {
     var flag = false;
-    var that=this;
+    var that = this;
     if (that.data.phone === '') {
       that.setData({
         show_error_3: true
@@ -346,61 +370,68 @@ Page({
         step: 'second'
       });
     }
-    
+
     wx.request({
       url: 'https://db.circleliu.cn:85/api/values',
       header: {
         'content-type': 'application/json'
       },
-      success (res) {
+      success(res) {
         console.log(res.data);
       }
     })
   },
-  prevStep: function(){
+  prevStep: function () {
     this.setData({
       page: false,
       step: 'first'
     });
   },
-  addAcc: function()
-  {
-    var accList=this.data.accessories;
-    var idxList=this.data.index;
-    var valList=this.data.value;
-    accList.push(this.data.accessories.length);
+  addAcc: function () {
+    var idxList = this.data.index;
+    var valList = this.data.value;
     idxList.push(0);
     valList.push(0);
     this.setData({
-      accessories: accList,
       index: idxList,
       value: valList
     });
   },
-  phoneNumber: function(e)
-  {
+  phoneNumber: function (e) {
     this.setData({
       phone: e.detail.value
     });
   },
-  PickerChange: function(e)
-  {
+  PickerChange: function (e) {
     console.log(e.detail.value);
-    var id=e.currentTarget.dataset.id;
-    var idxList=this.data.index;
-    idxList[id]=e.detail.value;
+    var id = e.currentTarget.dataset.id;
+    var idxList = this.data.index;
+    idxList[id] = e.detail.value;
     this.setData({
       index: idxList
     });
   },
-  inputNumber: function(e)
-  {
-    var id=e.currentTarget.dataset.id;
-    var valList=this.data.value;
-    valList[id]=e.detail.value;
-    this.setData({
+  inputNumber: function (e) {
+    var that=this;
+    var id = e.currentTarget.dataset.id;
+    var valList = this.data.value;
+    valList[id] = e.detail.value;
+    that.setData({
       value: valList
     });
     console.log(valList);
+  },
+  delPicker: function (e) {
+    var that=this;
+    var id=e.currentTarget.dataset.id;
+    var valList=that.data.value;
+    var idxList=that.data.index;
+    console.log(id);
+    valList.splice(id,1);
+    idxList.splice(id,1);
+    that.setData({
+      value: valList,
+      index: idxList
+    });
   }
 })

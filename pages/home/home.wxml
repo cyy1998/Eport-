@@ -1,27 +1,44 @@
 <!-- pages/home/home.wxml -->
 <view class="UCenter-bg">
-  <view class="padding" wx:if="{{isLogin}}">  
+  <view class="padding" wx:if="{{isLogin}}">
     <view class="cu-avatar lg round margin-top" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
     <view class="text-bold margin-top-sm">用户名：{{userName}}</view>
     <view class="text-bold margin-top-sm">ID：{{userID}}</view>
     <view class="text-bold margin-top-sm">工种：{{userType}}</view>
-    <button class="cu-btn round bg-gray margin-top" style="z-index: 1000;" bind:tap="quit">注销</button>
+    <button class="cu-btn round bg-gray margin-top" style="z-index: 1000;" bind:tap="quit">
+      注销
+    </button>
   </view>
   <view wx:else class="padding">
     <view class="cu-avatar lg round margin-top-xl">
       <text class="cuIcon-people"></text>
     </view>
     <view class="text-bold margin-top-lg">尚未登陆请先登陆</view>
-    <button class="cu-btn round bg-green margin-top" style="z-index: 1000;" bind:tap="login">登陆</button>
+    <button class="cu-btn round bg-green margin-top" style="z-index: 1000;" bind:tap="login">
+      登陆
+    </button>
   </view>
   <image src="https://image.weilanwl.com/gif/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 </view>
+<view wx:if="{{isLogin}}">
+  <view class="bg-white text-lg padding">待完成的{{userType=='巡检员'?'巡检单':'工单'}}</view>
+  <swiper class="card-swiper square-dot" indicator-dots="true" circular="true" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
+    <swiper-item wx:for="{{swiperList}}" wx:key class="{{cardCur==index?'cur':''}}">
+      <view class="swiper-item bg-white padding" data-id="{{index}}" bind:tap="showInformation">
+        <view>设备编号：{{swiperList[index]['device']}}</view>
+        <view class="margin-tb-sm">问题描述：{{swiperList[index]['detail']}}</view>
+        <view>联系方式：{{swiperList[index]['phone']}}</view>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>
+<view wx:if="{{!isLogin}}" class="text-xsl text-gray text-center margin-xl">请先登陆</view>
 <view class="cu-modal {{showLogin?'show':''}}" wx:if="{{showLogin}}">
   <view class="cu-dialog">
     <view>
       <view class="cu-bar bg-white justify-end">
         <view class="content">员工登陆</view>
-        <view class="action" bindtap="hideLogin">
+        <view class="action" bind:tap="hideLogin">
           <text class="cuIcon-close text-red"></text>
         </view>
       </view>
@@ -49,14 +66,20 @@
     </view>
   </view>
 </view>
-<swiper class="card-swiper square-dot" indicator-dots="true" circular="true" autoplay="false" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
-  <swiper-item wx:for="{{swiperList}}" wx:key class="{{cardCur==index?'cur':''}}">
-    <view class="swiper-item">
-      <view class="bg-white" style="width: 500rpx; height: 400rpx;">aaa</view>
+<view class="cu-modal {{showInfo?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">设备编号：{{device}}</view>
     </view>
-  </swiper-item>
-</swiper>
+    <view class="cu-bar bg-white justify-end">
+      <view class="action">
+        <button class="cu-btn line-green text-green" bind:tap="hideInformation">取消</button>
+        <button class="cu-btn bg-green margin-left" bindtap="hideModal">编辑</button>
+      </view>
+    </view>
+  </view>
+</view>
 <i-tab-bar current="{{ current }}" bindchange="handleChange" fixed="true">
   <i-tab-bar-item key="homepage" icon="homepage" current-icon="homepage_fill" title="主页"></i-tab-bar-item>
-  <i-tab-bar-item key="brush" icon="brush" current-icon="brush_fill" title="新建报单"></i-tab-bar-item>
+  <i-tab-bar-item key="brush" icon="brush" current-icon="brush_fill" title="扫码"></i-tab-bar-item>
 </i-tab-bar>
