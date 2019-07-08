@@ -6,7 +6,7 @@
 <view class="bg-blue padding-sm">
   <i-row>
     <i-col span="2" class="text-xxl" bind:tap="showModal">
-      <text class="cuIcon-sort text-white " ></text>
+      <text class="cuIcon-sort text-white "></text>
     </i-col>
     <i-col span="3">
       <view wx:if="{{isLogin}}" class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
@@ -90,8 +90,11 @@
         </view>
       </i-col>
     </i-row>
-    <view class="cu-form-group margin-top-sm">
+    <view hidden="{{modalName=='DrawerModal'}}" class="cu-form-group margin-top-sm">
       <textarea name="problem" maxlength="200" style="height: 200rpx;" bindinput="textareaInput" placeholder="不要超过200字~" />
+    </view>
+    <view hidden="{{modalName!='DrawerModal'}}" class="cu-form-group margin-top-sm">
+      <view class="margin-tb" style="height: 200rpx; word-break: break-all;">{{detail}}</view>
     </view>
     <i-row>
       <view class=" text-l padding">
@@ -109,7 +112,7 @@
     </i-row>
     <view class="cu-form-group margin-top-sm">
       <view class="title">手机号码</view>
-      <input name="phone" placeholder=""></input>
+      <input name="phone" type="number" placeholder="" bindinput="phoneNumber"></input>
       <view class="cu-capsule radius">
         <view class="cu-tag bg-blue">+86</view>
         <view class="cu-tag line-blue">中国大陆</view>
@@ -133,18 +136,23 @@
     </i-row>
     <view class="cu-form-group margin-top-sm">
       <view class="title">问题类型</view>
-      <input name="phone" placeholder=""></input>
+      <input name="problem_type" placeholder=""></input>
     </view>
-     <i-row>
+    <i-row>
       <view class=" text-l padding">
         <i-col span="24">
           <text class="text-gray text-bold">需求配件：</text>
           <view class="cu-list menu margin-top-sm card-menu">
-            <view class="cu-item" wx:for="{{accessories}}" wx:key></view>
-            <view class="cu-item text-center text-xl" style="align-items: center;">
-            <text ></text>
-            <text class="cuIcon-add text-gray"></text>
-            <text ></text>
+            <view class="cu-item cu-form-group" wx:for="{{accessories}}" wx:for-index="idx" wx:key>
+              <picker name='picker{{idx}}' data-id="{{idx}}" bindchange="PickerChange" value="{{index[idx]}}" range="{{picker}}">
+                <view class="picker">{{index[idx]?picker[index[idx]]:'配件类型'}}</view>
+              </picker>
+              <i-input-number name="number{{idx}}" value="{{value[idx]}}" min="0" max="100" data-id="{{idx}}" bind:change="inputNumber" class="margin-left-sm"></i-input-number>
+            </view>
+            <view class="cu-item text-center text-xl" style="align-items: center;" bind:tap="addAcc">
+              <text></text>
+              <text class="cuIcon-add text-gray"></text>
+              <text></text>
             </view>
           </view>
         </i-col>
@@ -152,22 +160,22 @@
     </i-row>
   </view>
   <view class="flex flex-direction" wx:if="{{isLogin&&step!='first'}}">
-      <button bind:tap="prevStep" class="cu-btn bg-blue margin-top-sm lg animation-{{animation}}">
-        上一步
-      </button>
-    </view>
+    <button bind:tap="prevStep" class="cu-btn bg-blue margin-top-sm lg animation-{{animation}}">
+      上一步
+    </button>
+  </view>
   <view class="flex flex-direction" wx:if="{{(isLogin&&step!='first')||(!isLogin&&step=='first')}}">
-      <button form-type="submit" class="cu-btn bg-green margin-tb-sm lg animation-{{animation}}">
-        确认提交
-      </button>
-    </view>
-    <view class="padding-sm flex flex-direction" wx:if="{{isLogin&&step=='first'}}">
-      <button bind:tap="nextStep" class="cu-btn bg-blue margin-tb-sm lg animation-{{animation}}">
-        下一步
-      </button>
-    </view>
+    <button form-type="submit" class="cu-btn bg-green margin-tb-sm lg animation-{{animation}}">
+      确认提交
+    </button>
+  </view>
+  <view class="padding-sm flex flex-direction" wx:if="{{isLogin&&step=='first'}}">
+    <button bind:tap="nextStep" class="cu-btn bg-blue margin-tb-sm lg animation-{{animation}}">
+      下一步
+    </button>
+  </view>
 </form>
-<view class="cu-modal {{showLogin?'show':''}}"  wx:if="{{showLogin}}">
+<view class="cu-modal {{showLogin?'show':''}}" wx:if="{{showLogin}}">
   <view class="cu-dialog">
     <view>
       <view class="cu-bar bg-white justify-end">

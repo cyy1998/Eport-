@@ -19,8 +19,12 @@ Page({
     showLogin: false,
     imgList: [],
     accessories:[],
+    index:[],
+    value:[],
+    picker: ['GTX770','GTX780','GTX970','GTX980','GTX 1060'],
     step: 'first',
     detail: '',
+    phone: '',
     modalName: '',
     is_password: true,
     eye_status: 'browse',
@@ -128,7 +132,7 @@ Page({
       });
       flag = true;
     }
-    if (e.detail.value['problem'] == '') {
+    if (e.detail.value['problem'] === '') {
       that.setData({
         show_error_2: true
       });
@@ -287,15 +291,116 @@ Page({
     }
   },
   nextStep: function() {
-    this.setData({
-      page: true,
-      step: 'second'
-    });
+    var flag = false;
+    var that=this;
+    if (that.data.phone === '') {
+      that.setData({
+        show_error_3: true
+      });
+      flag = true;
+    }
+    if (that.data.detail === '') {
+      that.setData({
+        show_error_2: true
+      });
+      flag = true;
+    }
+    if (that.data.imgList.length === 0) {
+      that.setData({
+        show_error_1: true
+      });
+      flag = true;
+    }
+    if (flag) {
+      if (that.data.phone != '') {
+        that.setData({
+          show_error_3: false
+        });
+      }
+      if (that.data.detail != '') {
+        that.setData({
+          show_error_2: false
+        });
+      }
+      if (that.data.imgList.length != 0) {
+        that.setData({
+          show_error_1: false
+        });
+      }
+      that.setData({
+        animation: 'shake'
+      })
+      setTimeout(function () {
+        that.setData({
+          animation: ''
+        })
+      }, 1000);
+    } else {
+      that.setData({
+        show_error_1: false,
+        show_error_2: false,
+        show_error_3: false
+      });
+      that.setData({
+        page: true,
+        step: 'second'
+      });
+    }
+    
+    wx.request({
+      url: 'https://db.circleliu.cn:85/api/values',
+      header: {
+        'content-type': 'application/json'
+      },
+      success (res) {
+        console.log(res.data);
+      }
+    })
   },
   prevStep: function(){
     this.setData({
       page: false,
       step: 'first'
     });
+  },
+  addAcc: function()
+  {
+    var accList=this.data.accessories;
+    var idxList=this.data.index;
+    var valList=this.data.value;
+    accList.push(this.data.accessories.length);
+    idxList.push(0);
+    valList.push(0);
+    this.setData({
+      accessories: accList,
+      index: idxList,
+      value: valList
+    });
+  },
+  phoneNumber: function(e)
+  {
+    this.setData({
+      phone: e.detail.value
+    });
+  },
+  PickerChange: function(e)
+  {
+    console.log(e.detail.value);
+    var id=e.currentTarget.dataset.id;
+    var idxList=this.data.index;
+    idxList[id]=e.detail.value;
+    this.setData({
+      index: idxList
+    });
+  },
+  inputNumber: function(e)
+  {
+    var id=e.currentTarget.dataset.id;
+    var valList=this.data.value;
+    valList[id]=e.detail.value;
+    this.setData({
+      value: valList
+    });
+    console.log(valList);
   }
 })
