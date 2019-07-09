@@ -1,5 +1,8 @@
 <!-- pages/scan/scan.wxml -->
-<view class="UCenter-bg"></view>
+<view class="UCenter-bg bg-blue light">
+    <image src="/img/EportLogo.png" style="width: 200rpx;" class="png" mode="widthFix"></image>
+    <view class="text-xl">健身器材管理系统</view>
+</view>
 <view class="margin-xl"></view>
 <view class="margin-xl"></view>
 <view class="margin-xl"></view>

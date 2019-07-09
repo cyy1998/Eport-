@@ -76,7 +76,7 @@
 <view class="cu-modal {{showInfo?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
-      <view class="content padding-tb">设备编号：{{device}}</view>
+      <view class="content ">设备编号：{{device}}</view>
     </view>
     <view class="padding-sm" style="text-align: left">现场图片：</view>
     <view class="cu-form-group">

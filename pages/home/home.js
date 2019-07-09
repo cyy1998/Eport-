@@ -1,5 +1,6 @@
 // pages/home/home.js
 const app = getApp();
+const utils = require('../../utils/md5.js');
 Page({
 
   /**
@@ -101,15 +102,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onLoad: function () {
-    wx.getLocation({
-      type: 'wgs84',
-      success(res){
-        this.setData({
-          user_x: res.longitude,
-          user_y: res.latitude
-        });
-      }
-    })
   },
 
   /**
@@ -224,9 +216,12 @@ Page({
           
         },
         complete(){
-         // wx.hideLoading();
+          wx.hideLoading();
         }
-      })
+      });
+
+      var password=utils.hex_md5(e.detail.value['password']);
+      console.log(password);
       app.globalData.name = e.detail.value['id'];
       app.globalData.id = e.detail.value['id'];
       app.globalData.type = '巡检员';

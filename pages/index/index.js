@@ -120,7 +120,7 @@ Page({
     });
 
   },
-  DelImg(e) {
+  DelImg: function(e) {
     this.data.imgList.splice(e.currentTarget.dataset.index, 1);
     this.setData({
       imgList: this.data.imgList
@@ -408,6 +408,7 @@ Page({
     var id = e.currentTarget.dataset.id;
     var idxList = this.data.index;
     idxList[id] = e.detail.value;
+    console.log(idxList);
     this.setData({
       index: idxList
     });

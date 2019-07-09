@@ -10,7 +10,6 @@
 }
 
 .UCenter-bg {
-    background-color: #0081ff;
     background-size: cover;
     height: 550rpx;
     display: flex;
@@ -19,7 +18,7 @@
     overflow: hidden;
     position: relative;
     flex-direction: column;
-    text-align: center;
+    align-items: center;
     color: #fff;
     font-weight: 300;
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
