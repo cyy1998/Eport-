@@ -6,15 +6,14 @@ Page({
   data: {
     CustomBar: app.globalData.CustomBar,
     device: '',
-    current: 'brush',
     animation: '',
     userName: '',
     userID: '',
     userType: '',
-    hasUserInfo: false,
     show_error_1: false,
     show_error_2: false,
     show_error_3: false,
+    show_error_4: false,
     isLogin: false,
     showLogin: false,
     imgList: [],
@@ -27,7 +26,6 @@ Page({
     modalName: '',
     is_password: true,
     eye_status: 'browse',
-    animation: '',
     error_message: '',
     show_error: false,
     phone_init: '',
@@ -45,11 +43,9 @@ Page({
   onLoad: function (options) {
     console.log(options);
     var lis = [];
-    for(var i=1;i<5;++i)
-    {
-      if(options['url'+i.toString()]!='')
-      {
-        lis.push(options['url'+i.toString()]);
+    for (var i = 1; i < 5; ++i) {
+      if (options['url' + i.toString()] != '') {
+        lis.push(options['url' + i.toString()]);
       }
     }
     this.setData({
@@ -157,6 +153,12 @@ Page({
       });
       flag = true;
     }
+    if (e.detail.value['problem_type'] === '') {
+      that.setData({
+        show_error_4: true
+      });
+      flag = true;
+    }
     if (flag) {
       if (e.detail.value['phone'] != '') {
         that.setData({
@@ -166,6 +168,11 @@ Page({
       if (e.detail.value['problem'] != '') {
         that.setData({
           show_error_2: false
+        });
+      }
+      if (e.detail.value['problem_type'] != '') {
+        that.setData({
+          show_error_4: false
         });
       }
       if (that.data.imgList.length != 0) {
@@ -185,16 +192,17 @@ Page({
       that.setData({
         show_error_1: false,
         show_error_2: false,
-        show_error_3: false
+        show_error_3: false,
+        show_error_4: false,
+        step: 'third'
       });
-      for(var i=0; i<that.data.imgList.length;++i)
-      {
+      for (var i = 0; i < that.data.imgList.length; ++i) {
 
         wx.uploadFile({
           url: 'https://sm.ms/api/upload',
           filePath: that.data.imgList[i],
           name: 'smfile',
-          success: res=>{
+          success: res => {
             console.log(res);
             wx.showToast({
               title: 'success'
@@ -373,19 +381,6 @@ Page({
         step: 'second'
       });
     }
-
-    wx.request({
-      url: 'https://tjsseibm.club/api/values',
-      header: {
-        'content-type': 'application/json'
-      },
-      success(res) {
-        console.log(res.data);
-        wx.showToast({
-          title: 'success'
-        });
-      }
-    })
   },
   prevStep: function () {
     this.setData({
@@ -418,7 +413,7 @@ Page({
     });
   },
   inputNumber: function (e) {
-    var that=this;
+    var that = this;
     var id = e.currentTarget.dataset.id;
     var valList = this.data.value;
     valList[id] = e.detail.value;
@@ -428,16 +423,33 @@ Page({
     console.log(valList);
   },
   delPicker: function (e) {
-    var that=this;
-    var id=e.currentTarget.dataset.id;
-    var valList=that.data.value;
-    var idxList=that.data.index;
+    var that = this;
+    var id = e.currentTarget.dataset.id;
+    var valList = that.data.value;
+    var idxList = that.data.index;
     console.log(id);
-    valList.splice(id,1);
-    idxList.splice(id,1);
+    valList.splice(id, 1);
+    idxList.splice(id, 1);
     that.setData({
       value: valList,
       index: idxList
     });
+  },
+  goHome: function () {
+    wx.switchTab({
+      url: '../home/home'
+    });
+    var pages = getCurrentPages();
+    console.log(pages.length);
+  },
+  goBack: function () {
+    var pages = getCurrentPages();
+    if (pages.length == 1) {
+      wx.switchTab({
+        url: '../scan/scan'
+      });
+    } else {
+      wx.navigateBack();
+    }
   }
 })

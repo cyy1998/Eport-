@@ -2,7 +2,8 @@
   "pages": [
     "pages/home/home",
     "pages/index/index",
-    "pages/scan/scan"
+    "pages/scan/scan",
+    "pages/employee/employee"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -17,21 +18,20 @@
   "tabBar": {
     "color": "#a9b7b7",
     "selectedColor": "#0081ff",
-    
-    "list": [
-      {
-        "selectedIconPath": "img/home_selected.png",
-        "iconPath": "img/home.png",
-        "pagePath": "pages/home/home",
-        "text": "主页"
-      },
+    "list": [    
       {
         "selectedIconPath": "img/scan_selected.png",
         "iconPath": "img/scan.png",
         "pagePath": "pages/scan/scan",
         "text": "扫码"
+      },
+      {
+        "selectedIconPath": "img/home_selected.png",
+        "iconPath": "img/home.png",
+        "pagePath": "pages/home/home",
+        "text": "主页"
       }
     ]
-},
+  },
   "sitemapLocation": "sitemap.json"
 }

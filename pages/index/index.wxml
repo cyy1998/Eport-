@@ -26,7 +26,10 @@
       <view class="text-bold margin-top-lg">用户名：{{userName}}</view>
       <view class="text-bold margin-top">ID：{{userID}}</view>
       <view class="text-bold margin-top">工种：{{userType}}</view>
-      <button class="cu-btn round bg-gray margin-top" bind:tap="quit">注销</button>
+      <view class="justify-center">
+        <button class="cu-btn round bg-green margin-top" bind:tap="goHome">个人主页</button>
+        <button class="cu-btn round bg-gray margin-top margin-left-sm" bind:tap="quit">注销</button>
+      </view>
     </view>
     <view wx:else class="padding">
       <view class="cu-avatar lg round margin-top-xl">
@@ -50,7 +53,7 @@
     </i-col>
   </i-row>
 </view>
-<form bind:submit="formSubmit" wx:if="{{userType=='巡检员'||!isLogin}}">
+<form bind:submit="formSubmit">
   <view hidden="{{step!='first'}}">
     <i-row wx:if="{{show_error_1}}">
       <i-col span="24">
@@ -127,7 +130,7 @@
         </i-col>
       </view>
     </i-row>
-    <i-row wx:if="{{show_error_3}}">
+    <i-row wx:if="{{show_error_4}}">
       <i-col span="24">
         <view class="text-sm padding-sm">
           <text class="text-red text-shadow">问题类型不能为空</text>
@@ -160,26 +163,29 @@
       </view>
     </i-row>
   </view>
-  <view class="padding-lr-sm flex flex-direction" wx:if="{{isLogin&&step!='first'}}">
+  <view class="padding-lr-sm flex flex-direction" wx:if="{{userType=='巡检员'&&step=='second'}}">
     <button bind:tap="prevStep" class="cu-btn bg-blue margin-top-sm lg animation-{{animation}}">
       上一步
     </button>
   </view>
-  <view class="padding-lr-sm flex flex-direction" wx:if="{{(isLogin&&step!='first')||(!isLogin&&step=='first')}}">
+  <view class="padding-lr-sm flex flex-direction" wx:if="{{(userType=='巡检员'&&step=='second')||(userType!='巡检员'&&step=='first')}}">
     <button form-type="submit" class="cu-btn bg-green margin-tb-sm lg animation-{{animation}}">
       确认提交
     </button>
   </view>
-  <view class="padding-sm flex flex-direction" wx:if="{{isLogin&&step=='first'}}">
+  <view class="padding-sm flex flex-direction" wx:if="{{userType=='巡检员'&&step=='first'}}">
     <button bind:tap="nextStep" class="cu-btn bg-blue margin-tb-sm lg animation-{{animation}}">
       下一步
     </button>
   </view>
 </form>
-<view wx:if="{{userType=='维修员'}}">
-  <view class="text-xsl text-center padding">
+<view hidden="{{step!='third'}}" class="text-center">
+  <view class="margin-tb-xl"></view>
+  <view class="text-xsl text-center margin-tb-xl">
     <text class="cuIcon-roundcheckfill text-green"></text>
   </view>
+  <view class="text-xxl text-center text-gray">报修成功，感谢您的帮助</view>
+  <button class="cu-btn bg-green round lg margin-top" bind:tap="goBack">确认</button>
 </view>
 <view class="cu-modal {{showLogin?'show':''}}">
   <view class="cu-dialog shadow">

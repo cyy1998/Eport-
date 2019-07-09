@@ -70,14 +70,20 @@ Page({
         isLogin: app.globalData.loginStatus
       });
     }
-    var lis = []
-    for (var i = 0; i < 5; ++i) {
-      lis.push({
-        'device': i.toString(),
-        'detail': '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-        'phone': '123456',
-        'url': ['https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
-      });
+    var lis = [];
+    if (this.data.userType == '巡检员') {
+      for (var i = 0; i < 5; ++i) {
+        lis.push({
+          'id': i.toString(),
+          'device': i.toString(),
+          'detail': '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
+          'phone': '123456',
+          'url': ['https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
+        });
+      }
+    }
+    else{
+
     }
     this.setData({
       swiperList: lis
@@ -95,7 +101,15 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onLoad: function () {
-
+    wx.getLocation({
+      type: 'wgs84',
+      success(res){
+        this.setData({
+          user_x: res.longitude,
+          user_y: res.latitude
+        });
+      }
+    })
   },
 
   /**
@@ -194,6 +208,25 @@ Page({
         })
       }, 1000);
     } else {
+      wx.showLoading({
+        title: '登陆中',
+        mask: true
+      })
+      wx.request({
+        url: 'https://tjsseibm.club/api/mobile/login',
+        method: 'POST',
+        data: {
+          id: e.detail.value['id'],
+          password: e.detail.value['password']
+        },
+        success(res){
+          console.log(res);
+          
+        },
+        complete(){
+         // wx.hideLoading();
+        }
+      })
       app.globalData.name = e.detail.value['id'];
       app.globalData.id = e.detail.value['id'];
       app.globalData.type = '巡检员';
@@ -242,7 +275,7 @@ Page({
     })
   },
   showInformation: function (e) {
-    var that=this;
+    var that = this;
     var id = e.currentTarget.dataset.id;
     that.setData({
       imgList: [],
@@ -252,12 +285,11 @@ Page({
       title: '加载中',
       mask: true
     })
-    for(var i=0;i<this.data.swiperList[id]['url'].length;++i)
-    {
+    for (var i = 0; i < this.data.swiperList[id]['url'].length; ++i) {
       wx.downloadFile({
         url: this.data.swiperList[id]['url'][i],
-        success(res){
-          var lis=that.data.imgList;
+        success(res) {
+          var lis = that.data.imgList;
           lis.push(res.tempFilePath);
           that.setData({
             imgList: lis
@@ -286,7 +318,7 @@ Page({
     });
   },
   Edit: function () {
-    var that=this;
+    var that = this;
     var urlPath = String();
     for (var i = 1; i < 5; ++i) {
       if (i - 1 < this.data.imgList.length) {
@@ -302,6 +334,23 @@ Page({
         that.hideInformation();
       }
 
+    });
+  },
+  Scan: function(){
+    wx.scanCode({
+      onlyFromCamera: true,
+      scanType: ['barCode', 'qrCode', 'datamatrix','pdf417'],
+      success: res=>{
+        console.log(res);
+        if(res['path']===undefined)
+        {
+          return;
+        }
+        var path=res['path'];
+        wx.navigateTo({
+          url: '../employee/employee?deviceID=001'
+        })
+      }
     });
   }
 })
