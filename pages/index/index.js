@@ -196,6 +196,9 @@ Page({
           name: 'smfile',
           success: res=>{
             console.log(res);
+            wx.showToast({
+              title: 'success'
+            });
           }
         });
       }
@@ -274,7 +277,7 @@ Page({
     } else {
       app.globalData.name = e.detail.value['id'];
       app.globalData.id = e.detail.value['id'];
-      app.globalData.type = '巡检员';
+      app.globalData.type = '维修员';
       app.globalData.loginStatus = true;
       that.setData({
         show_error: false,
@@ -282,7 +285,7 @@ Page({
         isLogin: true,
         userName: e.detail.value['id'],
         userID: e.detail.value['id'],
-        userType: '巡检员'
+        userType: '维修员'
       });
       wx.setStorage({
         key: 'id',
@@ -372,12 +375,15 @@ Page({
     }
 
     wx.request({
-      url: 'https://db.circleliu.cn:85/api/values',
+      url: 'https://tjsseibm.club/api/values',
       header: {
         'content-type': 'application/json'
       },
       success(res) {
         console.log(res.data);
+        wx.showToast({
+          title: 'success'
+        });
       }
     })
   },

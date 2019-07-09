@@ -50,7 +50,7 @@
     </i-col>
   </i-row>
 </view>
-<form bind:submit="formSubmit">
+<form bind:submit="formSubmit" wx:if="{{userType=='巡检员'||!isLogin}}">
   <view hidden="{{step!='first'}}">
     <i-row wx:if="{{show_error_1}}">
       <i-col span="24">
@@ -176,8 +176,13 @@
     </button>
   </view>
 </form>
+<view wx:if="{{userType=='维修员'}}">
+  <view class="text-xsl text-center padding">
+    <text class="cuIcon-roundcheckfill text-green"></text>
+  </view>
+</view>
 <view class="cu-modal {{showLogin?'show':''}}">
-  <view class="cu-dialog">
+  <view class="cu-dialog shadow">
     <view>
       <view class="cu-bar bg-white justify-end">
         <view class="content">员工登陆</view>

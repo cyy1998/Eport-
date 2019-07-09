@@ -21,10 +21,10 @@
   <image src="https://image.weilanwl.com/gif/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 </view>
 <view wx:if="{{isLogin}}">
-  <view class="bg-white text-lg padding">待完成的{{userType=='巡检员'?'巡检单':'工单'}}</view>
+  <view class="bg-white text-lg padding shadow-warp">待完成的{{userType=='巡检员'?'巡检单':'工单'}}</view>
   <swiper class="card-swiper square-dot" indicator-dots="true" circular="true" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
     <swiper-item wx:for="{{swiperList}}" wx:key class="{{cardCur==index?'cur':''}}">
-      <view class="swiper-item bg-white padding" data-id="{{index}}" bind:tap="showInformation">
+      <view class="swiper-item bg-white padding shadow" data-id="{{index}}" bind:tap="showInformation">
         <view>设备编号：{{swiperList[index]['device']}}</view>
         <view class="margin-tb-sm">问题描述：{{swiperList[index]['detail']}}</view>
         <view>联系方式：{{swiperList[index]['phone']}}</view>
@@ -33,8 +33,8 @@
   </swiper>
 </view>
 <view wx:if="{{!isLogin}}" class="text-xsl text-gray text-center margin-xl">请先登陆</view>
-<view class="cu-modal {{showLogin?'show':''}}" wx:if="{{showLogin}}">
-  <view class="cu-dialog">
+<view class="cu-modal {{showLogin?'show':''}}">
+  <view class="cu-dialog shadow">
     <view>
       <view class="cu-bar bg-white justify-end">
         <view class="content">员工登陆</view>
@@ -71,7 +71,7 @@
     <view class="cu-bar bg-white justify-end">
       <view class="content">设备编号：{{device}}</view>
     </view>
-    <view class="" style="text-align: left">现场图片：</view>
+    <view class="padding-sm" style="text-align: left">现场图片：</view>
     <view class="cu-form-group">
       <view class="grid col-4 grid-square flex-sub">
         <view class="bg-img"  style="text-align: left" wx:for="{{imgList}}" wx:key="{{index}}" bindtap="ViewImage" data-url="{{imgList[index]}}">
@@ -90,7 +90,3 @@
     </view>
   </view>
 </view>
-<i-tab-bar current="{{ current }}" bindchange="handleChange" fixed="true">
-  <i-tab-bar-item key="homepage" icon="homepage" current-icon="homepage_fill" title="主页"></i-tab-bar-item>
-  <i-tab-bar-item key="brush" icon="scan" current-icon="brush_fill" title="扫码"></i-tab-bar-item>
-</i-tab-bar>

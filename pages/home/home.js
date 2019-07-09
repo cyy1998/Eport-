@@ -1,5 +1,5 @@
 // pages/home/home.js
-const app=getApp();
+const app = getApp();
 Page({
 
   /**
@@ -20,6 +20,7 @@ Page({
     error_message: '',
     show_error: false,
     swiperList: [],
+    bitMap: [],
     cardCur: 0,
     device: '',
     detail: '',
@@ -31,22 +32,19 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onShow: function (options) {
     if (!app.globalData.loginStatus) {
-      var _id=wx.getStorageSync('id');
-      if(_id)
-      {
-        app.globalData.id=_id;
+      var _id = wx.getStorageSync('id');
+      if (_id) {
+        app.globalData.id = _id;
       }
-      var _name=wx.getStorageSync('name');
-      if(_name)
-      {
-        app.globalData.name=_name;
+      var _name = wx.getStorageSync('name');
+      if (_name) {
+        app.globalData.name = _name;
       }
-      var _type=wx.getStorageSync('type');
-      if(_type)
-      {
-        app.globalData.type=_type;
+      var _type = wx.getStorageSync('type');
+      if (_type) {
+        app.globalData.type = _type;
       }
       if (app.globalData.id != '') {
         app.globalData.loginStatus = true;
@@ -72,14 +70,13 @@ Page({
         isLogin: app.globalData.loginStatus
       });
     }
-    var lis=[]
-    for(var i=0; i<5; ++i)
-    {
+    var lis = []
+    for (var i = 0; i < 5; ++i) {
       lis.push({
         'device': i.toString(),
         'detail': '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
         'phone': '123456',
-        'url': ['https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg','https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg','https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg','https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
+        'url': ['https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
       });
     }
     this.setData({
@@ -97,7 +94,7 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onLoad: function () {
 
   },
 
@@ -136,16 +133,16 @@ Page({
 
   },
 
-  login: function(){
+  login: function () {
     this.setData({
       showLogin: true
     });
   },
-  quit: function(){
-    app.globalData.loginStatus=false;
-    app.globalData.name='';
-    app.globalData.id='';
-    app.globalData.type='';
+  quit: function () {
+    app.globalData.loginStatus = false;
+    app.globalData.name = '';
+    app.globalData.id = '';
+    app.globalData.type = '';
     this.setData({
       isLogin: false,
       userName: '路人',
@@ -166,7 +163,7 @@ Page({
       data: ''
     });
   },
-  hideLogin: function(){
+  hideLogin: function () {
     this.setData({
       showLogin: false
     });
@@ -197,10 +194,10 @@ Page({
         })
       }, 1000);
     } else {
-      app.globalData.name=e.detail.value['id'];
-      app.globalData.id=e.detail.value['id'];
-      app.globalData.type='巡检员';
-      app.globalData.loginStatus=true;
+      app.globalData.name = e.detail.value['id'];
+      app.globalData.id = e.detail.value['id'];
+      app.globalData.type = '巡检员';
+      app.globalData.loginStatus = true;
       that.setData({
         show_error: false,
         showLogin: false,
@@ -212,8 +209,7 @@ Page({
       wx.setStorage({
         key: 'id',
         data: app.globalData.id,
-        success: function(res)
-        {
+        success: function (res) {
           console.log('yes');
         }
       });
@@ -245,17 +241,39 @@ Page({
       cardCur: e.detail.current
     })
   },
-  showInformation: function(e){
-    var id=e.currentTarget.dataset.id;
+  showInformation: function (e) {
+    var that=this;
+    var id = e.currentTarget.dataset.id;
+    that.setData({
+      imgList: [],
+      bitMap: [],
+    });
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
+    for(var i=0;i<this.data.swiperList[id]['url'].length;++i)
+    {
+      wx.downloadFile({
+        url: this.data.swiperList[id]['url'][i],
+        success(res){
+          var lis=that.data.imgList;
+          lis.push(res.tempFilePath);
+          that.setData({
+            imgList: lis
+          });
+          wx.hideLoading();
+        }
+      })
+    }
     this.setData({
       device: this.data.swiperList[id]['device'],
       detail: this.data.swiperList[id]['detail'],
       phone: this.data.swiperList[id]['phone'],
-      imgList: this.data.swiperList[id]['url'],
       showInfo: true
     });
   },
-  hideInformation: function(){
+  hideInformation: function () {
 
     this.setData({
       showInfo: false
@@ -267,10 +285,23 @@ Page({
       current: e.currentTarget.dataset.url
     });
   },
-  Edit: function()
-  {
+  Edit: function () {
+    var that=this;
+    var urlPath = String();
+    for (var i = 1; i < 5; ++i) {
+      if (i - 1 < this.data.imgList.length) {
+        urlPath += '&url' + i.toString() + '=' + this.data.imgList[i - 1];
+      } else {
+        urlPath += '&url' + i.toString() + '=';
+      }
+    }
     wx.navigateTo({
-      url: '../index/index?deviceID='+this.data.device+'&phone='+this.data.phone+'&detail='+this.data.detail
+      url: '../index/index?deviceID=' + this.data.device + '&phone=' + this.data.phone + '&detail=' + this.data.detail +
+        urlPath,
+      success: function (res) {
+        that.hideInformation();
+      }
+
     });
   }
 })

@@ -62,5 +62,22 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  Scan: function(){
+    wx.scanCode({
+      onlyFromCamera: true,
+      scanType: ['barCode', 'qrCode', 'datamatrix','pdf417'],
+      success: res=>{
+        console.log(res);
+        if(res['path']===undefined)
+        {
+          return;
+        }
+        var path=res['path'];
+        wx.navigateTo({
+          url: '../index/index?deviceID=001&detail=&phone=&url1=&url2=&url3=&url4='
+        })
+      }
+    });
   }
 })
