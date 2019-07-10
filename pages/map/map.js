@@ -15,10 +15,19 @@ Page({
    */
   onLoad: function (options) {
     var that=this
+    
     wx.getLocation({
       type: 'gcj02',
       success: function (res) {
         that.setData({
+          markers: [{
+            latitude: res.latitude,
+            longitude: res.longitude,
+            iconPath: '../../img/icon.png',
+            label: {
+              content: '1000000'
+            }
+          }],
           latitude: res.latitude,
           longitude: res.longitude
         });

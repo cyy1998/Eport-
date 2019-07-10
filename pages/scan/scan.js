@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    showModal: false
   },
 
   /**
@@ -63,30 +63,39 @@ Page({
   onShareAppMessage: function () {
 
   },
-  Scan: function(){
+  Scan: function () {
     wx.scanCode({
       onlyFromCamera: true,
-      scanType: ['barCode', 'qrCode', 'datamatrix','pdf417'],
-      success: res=>{
+      scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
+      success: res => {
         console.log(res);
-        if(res['path']===undefined)
-        {
+        if (res['path'] === undefined) {
+          this.setData({
+            showModal: true
+          })
           console.log('fail');
           return;
         }
-        var path=res['path'];
-        var reg=/deviceID=(\d)+/;
-        var r=path.match(reg)
-        if(r===null)
-        {
+        var path = res['path'];
+        var reg = /deviceID=(\d)+/;
+        var r = path.match(reg)
+        if (r === null) {
+          this.setData({
+            showModal: true
+          })
           console.log('fail2');
           return;
         }
-        var id=r.slice(9);
+        var id = r[0].slice(9);
         wx.navigateTo({
-          url: '../index/index?deviceID='+id+'&detail=&phone=&url1=&url2=&url3=&url4='
+          url: '../index/index?deviceID=' + id + '&detail=&phone=&url1=&url2=&url3=&url4='
         });
       }
+    })
+  },
+  hideModal: function(){
+    this.setData({
+      showModal: false
     });
   }
 })

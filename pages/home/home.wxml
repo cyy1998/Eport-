@@ -4,12 +4,17 @@
     <i-avatar class="margin-top" size="large">
       <open-data type="userAvatarUrl" />
     </i-avatar>
-    <view class="text-bold margin-top-sm">用户名：{{userName}}</view>
     <view class="text-bold margin-top-sm">ID：{{userID}}</view>
-    <view class="text-bold margin-top-sm">工种：{{userType}}</view>
-    <button class="cu-btn round bg-gray margin-top" style="z-index: 1000;" bind:tap="quit">
+    <view class="flex justify-center">
+      <view class="text-bold margin-top-sm">用户名：{{userName}}</view>
+      <view class="text-bold margin-top-sm margin-left-sm">工种：{{userType}}</view>
+    </view>
+    <view class="flex justify-center">
+    <button class="cu-btn round bg-green margin-top" style="z-index: 1000;" bind:tap="turnMap">附近器材</button>
+    <button class="cu-btn round bg-gray margin-top margin-left-sm" style="z-index: 1000;" bind:tap="quit">
       注销
     </button>
+    </view>
   </view>
   <view wx:else class="padding">
     <view class="cu-avatar lg round margin-top-xl">
@@ -81,6 +86,9 @@
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
       <view class="content ">{{userType=='巡检员'?'报修单':'工单'}}编号：{{device}}</view>
+      <view class="action" bind:tap="hideInformation">
+        <text class="cuIcon-close text-red"></text>
+      </view>
     </view>
     <view class="padding-sm" style="text-align: left" wx:if="{{userType=='巡检员'}}">现场图片：</view>
     <view class="cu-form-group">
@@ -95,7 +103,7 @@
     <view class="padding-sm" style="text-align: left">联系人：{{phone}}</view>
     <view class="cu-bar bg-white justify-end">
       <view class="action" wx:if="{{userType=='巡检员'}}">
-        <button class="cu-btn line-red text-red" bind:tap="hideInformation">删除</button>
+        <button class="cu-btn line-red text-red" bind:tap="Delete">删除</button>
         <button class="cu-btn bg-green margin-left" bind:tap="Edit">编辑</button>
       </view>
       <view class="action" wx:if="{{userType=='维修员'}}">

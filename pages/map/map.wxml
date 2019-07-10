@@ -4,5 +4,5 @@
   <view slot="content">地图</view>
 </cu-custom>
 <view class="empty_tip">
-<map style="width: 100%; height: 100%;" show-location="true" longitude="{{longitude}}" latitude="{{latitude}}" scale="18"/>
+<map style="width: 100%; height: 100%;" show-compass  show-location="true" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="18"/>
 </view>

@@ -298,10 +298,11 @@ Page({
     that.setData({
       bitMap: bit
     });
-    this.downloadData(id,0,that);
-    this.downloadData(id,1,that);
-    this.downloadData(id,2,that);
-    this.downloadData(id,3,that);
+    for(var i=0; i<this.data.swiperList[id]['url'].length; ++i)
+    {
+      this.downloadData(id,i,that);
+    }
+    
     this.setData({
       device: this.data.swiperList[id]['device'],
       detail: this.data.swiperList[id]['detail'],
@@ -356,7 +357,6 @@ Page({
         for(var x=0;x<that.data.bitMap.length;++x)
         {
           flag=flag*that.data.bitMap[x];
-          console.log(flag);
         }
         if(flag!=0)
         {
@@ -381,8 +381,13 @@ Page({
         var id=path.match(reg)[0].slice(9);
         wx.navigateTo({
           url: '../employee/employee?deviceID='+id
-        })
+        });
       }
+    });
+  },
+  turnMap: function(){
+    wx.navigateTo({
+      url: '../map/map'
     });
   }
 })

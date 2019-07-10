@@ -14,12 +14,16 @@ Page({
     show_error_2: false,
     show_error_3: false,
     show_error_4: false,
+    show_error_5: false,
+    beReplaced: false,
     isLogin: false,
     showLogin: false,
     imgList: [],
     index: [],
+    index_replace: 0,
     value: [],
     picker: ['GTX770', 'GTX780', 'GTX970', 'GTX980', 'GTX 1060'],
+    picker_r: ['aaaa', 'bbbbb', 'cccccc'],
     step: 'first',
     detail: '',
     phone: '',
@@ -120,7 +124,7 @@ Page({
     });
 
   },
-  DelImg: function(e) {
+  DelImg: function (e) {
     this.data.imgList.splice(e.currentTarget.dataset.index, 1);
     this.setData({
       imgList: this.data.imgList
@@ -153,11 +157,23 @@ Page({
       });
       flag = true;
     }
-    if (e.detail.value['problem_type'] === '') {
+    if (e.detail.value['problem_type'] === '' && this.data.userType === '巡检员') {
       that.setData({
         show_error_4: true
       });
       flag = true;
+    }
+    if (!that.data.beReplaced) {
+      for (var i = 0; i < this.data.index.length; ++i) {
+        if (!this.data.index[i]) {
+          that.setData({
+            show_error_5: true
+          });
+          flag = true;
+        }
+      }
+    } else {
+
     }
     if (flag) {
       if (e.detail.value['phone'] != '') {
@@ -180,6 +196,17 @@ Page({
           show_error_1: false
         });
       }
+      var flag2 = true;
+      for (var i = 0; i < that.data.index.length; ++i) {
+        if (!that.data.index[i]) {
+          flag2 = false;
+        }
+      }
+      if (flag2) {
+        that.setData({
+          show_error_5: false
+        });
+      }
       that.setData({
         animation: 'shake'
       })
@@ -197,19 +224,29 @@ Page({
         step: 'third'
       });
       for (var i = 0; i < that.data.imgList.length; ++i) {
-
         wx.uploadFile({
           url: 'https://sm.ms/api/upload',
           filePath: that.data.imgList[i],
           name: 'smfile',
           success: res => {
-            console.log(res);
             wx.showToast({
               title: 'success'
             });
           }
         });
       }
+      var imgurl='';
+      for(var i=0; i<that.data.imgList.length;++i)
+      {
+        imgurl+=that.data.imgList[i]+' ';
+      }
+      var data={
+        url: imgurl,
+        detail: that.data.detail,
+        phone: that.data.phone,
+        problemType: e.detail.value['problem_type']
+      }
+      console.log(data);
     }
   },
   showModal: function () {
@@ -392,7 +429,7 @@ Page({
     var idxList = this.data.index;
     var valList = this.data.value;
     idxList.push(0);
-    valList.push(0);
+    valList.push('1');
     this.setData({
       index: idxList,
       value: valList
@@ -404,13 +441,18 @@ Page({
     });
   },
   PickerChange: function (e) {
-    console.log(e.detail.value);
     var id = e.currentTarget.dataset.id;
     var idxList = this.data.index;
     idxList[id] = e.detail.value;
     console.log(idxList);
     this.setData({
       index: idxList
+    });
+  },
+  PickerChange2: function (e) {
+    console.log(e.detail.value);
+    this.setData({
+      index_replace: e.detail.value
     });
   },
   inputNumber: function (e) {
@@ -452,5 +494,11 @@ Page({
     } else {
       wx.navigateBack();
     }
+  },
+  switchChange: function (e) {
+    console.log(e.detail.value);
+    this.setData({
+      beReplaced: e.detail.value
+    });
   }
 })
