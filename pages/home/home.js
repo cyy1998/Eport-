@@ -10,6 +10,7 @@ Page({
     userID: '',
     userName: '',
     usertype: '',
+    userAvatar: '',
     show_error_1: false,
     show_error_2: false,
     show_error_3: false,
@@ -27,13 +28,21 @@ Page({
     detail: '',
     phone: '',
     imgList: [],
-    showInfo: false
+    showInfo: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onShow: function (options) {
+    if(app.globalData.avatar==='')
+    {
+      wx.getUserInfo({
+        success(res){
+         console.log(res);
+        }
+      });
+    }
     if (!app.globalData.loginStatus) {
       var _id = wx.getStorageSync('id');
       if (_id) {
@@ -79,7 +88,7 @@ Page({
           'device': i.toString(),
           'detail': '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
           'phone': '123456',
-          'url': ['https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
+          'url': ['https://i.loli.net/2019/07/08/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg', 'https:\/\/i.loli.net\/2019\/07\/08\/5d23255068fe820393.jpg']
         });
       }
     }
@@ -272,6 +281,7 @@ Page({
   showInformation: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
+    console.log(id);
     that.setData({
       imgList: [],
       bitMap: [],
@@ -280,19 +290,18 @@ Page({
       title: '加载中',
       mask: true
     })
-    for (var i = 0; i < this.data.swiperList[id]['url'].length; ++i) {
-      wx.downloadFile({
-        url: this.data.swiperList[id]['url'][i],
-        success(res) {
-          var lis = that.data.imgList;
-          lis.push(res.tempFilePath);
-          that.setData({
-            imgList: lis
-          });
-          wx.hideLoading();
-        }
-      })
+    var bit=[];
+    for (var i = 0; i < this.data.swiperList[id]['url'].length; ++i)
+    {
+      bit.push(0);
     }
+    that.setData({
+      bitMap: bit
+    });
+    this.downloadData(id,0,that);
+    this.downloadData(id,1,that);
+    this.downloadData(id,2,that);
+    this.downloadData(id,3,that);
     this.setData({
       device: this.data.swiperList[id]['device'],
       detail: this.data.swiperList[id]['detail'],
@@ -331,6 +340,31 @@ Page({
 
     });
   },
+  downloadData: function(id,idx,that){
+    wx.downloadFile({
+      url: that.data.swiperList[id]['url'][idx],
+      success(res) {
+        var lis = that.data.imgList;
+        lis.push(res.tempFilePath);
+        var b=that.data.bitMap;
+        b[idx]=1;          
+        that.setData({
+          imgList: lis,
+          bitMap: b
+        });
+        var flag=1;
+        for(var x=0;x<that.data.bitMap.length;++x)
+        {
+          flag=flag*that.data.bitMap[x];
+          console.log(flag);
+        }
+        if(flag!=0)
+        {
+          wx.hideLoading();
+        }
+      }
+    });
+  },
   Scan: function(){
     wx.scanCode({
       onlyFromCamera: true,
@@ -342,8 +376,11 @@ Page({
           return;
         }
         var path=res['path'];
+        var reg=/deviceID=(\d)+/;
+        console.log(path.match(reg))
+        var id=path.match(reg)[0].slice(9);
         wx.navigateTo({
-          url: '../employee/employee?deviceID=001'
+          url: '../employee/employee?deviceID='+id
         })
       }
     });

@@ -16,4 +16,4 @@
         </view>
     </i-col>
 </i-row>
-<view class="text-xl text-center margin-tb text-gray">扫码进行报修或完成维修</view>
+<view class="text-xl text-center margin-tb text-gray">扫码进行报修</view>

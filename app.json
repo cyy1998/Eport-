@@ -3,7 +3,8 @@
     "pages/home/home",
     "pages/index/index",
     "pages/scan/scan",
-    "pages/employee/employee"
+    "pages/employee/employee",
+    "pages/map/map"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -18,7 +19,7 @@
   "tabBar": {
     "color": "#a9b7b7",
     "selectedColor": "#0081ff",
-    "list": [    
+    "list": [
       {
         "selectedIconPath": "img/scan_selected.png",
         "iconPath": "img/scan.png",
@@ -32,6 +33,11 @@
         "text": "主页"
       }
     ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
   },
   "sitemapLocation": "sitemap.json"
 }

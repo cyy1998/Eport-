@@ -1,18 +1,29 @@
-// pages/scan/scan.js
+// pages/map/map.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    latitude: '',
+    longitude: '',
+    markers: []
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    var that=this
+    wx.getLocation({
+      type: 'gcj02',
+      success: function (res) {
+        that.setData({
+          latitude: res.latitude,
+          longitude: res.longitude
+        });
+      }
+    })
   },
 
   /**
@@ -62,31 +73,5 @@ Page({
    */
   onShareAppMessage: function () {
 
-  },
-  Scan: function(){
-    wx.scanCode({
-      onlyFromCamera: true,
-      scanType: ['barCode', 'qrCode', 'datamatrix','pdf417'],
-      success: res=>{
-        console.log(res);
-        if(res['path']===undefined)
-        {
-          console.log('fail');
-          return;
-        }
-        var path=res['path'];
-        var reg=/deviceID=(\d)+/;
-        var r=path.match(reg)
-        if(r===null)
-        {
-          console.log('fail2');
-          return;
-        }
-        var id=r.slice(9);
-        wx.navigateTo({
-          url: '../index/index?deviceID='+id+'&detail=&phone=&url1=&url2=&url3=&url4='
-        });
-      }
-    });
   }
 })

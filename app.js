@@ -16,6 +16,7 @@ App({
     id: '',
     name: '',
     type: '',
+    avatar: ''
   }
   
 })

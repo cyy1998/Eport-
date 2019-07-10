@@ -9,7 +9,11 @@
             <text class="cuIcon-sort text-white "></text>
         </i-col>
         <i-col span="3">
-            <view wx:if="{{isLogin}}" class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
+            <view wx:if="{{isLogin}}">
+                <i-avatar class="margin-top" size="large">
+                    <open-data type="userAvatarUrl" />
+                </i-avatar>
+            </view>
             <view wx:else class="cu-avatar round">
                 <text class="cuIcon-people"></text>
             </view>
@@ -22,7 +26,9 @@
 <view class=" cu-modal drawer-modal justify-start {{modalName=='DrawerModal'?'show':''}}" bind:tap="hideModal">
     <view class="cu-dialog bg-blue basis-lg" catch:tap style="top:{{CustomBar}}px;height:calc(100vh - {{CustomBar}}px)">
         <view class="padding" wx:if="{{isLogin}}">
-            <view class="cu-avatar lg round margin-top-xl" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
+            <i-avatar class="margin-top" size="large">
+                <open-data type="userAvatarUrl" />
+            </i-avatar>
             <view class="text-bold margin-top-lg">用户名：{{userName}}</view>
             <view class="text-bold margin-top">ID：{{userID}}</view>
             <view class="text-bold margin-top">工种：{{userType}}</view>

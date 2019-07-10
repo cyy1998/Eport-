@@ -48,13 +48,13 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 0,
 			"list": [
 				{
 					"id": 0,
 					"name": "mode1",
 					"pathName": "pages/login/login",
-					"query": "deviceID=001",
+					"query": "",
 					"scene": 1047
 				},
 				{
@@ -67,8 +67,15 @@
 				{
 					"id": 2,
 					"name": "mode3",
-					"pathName": "pages/employee/employee",
-					"query": "",
+					"pathName": "pages/index/index",
+					"query": "deviceID=1001&detail=&phone=&url1=&url2=&url3=&url4=",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "mode4",
+					"pathName": "pages/map/map",
+					"query": "deviceID=1000000000&phone=&detail=&url1=&url2=&url3=&url4=",
 					"scene": null
 				}
 			]
