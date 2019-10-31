@@ -8,3 +8,41 @@
     align-items:center;/*垂直居中*/
     justify-content: center;/*水平居中*/
   }
+  .position-icon {
+    position: fixed;
+    height: 80rpx;
+    width: 80rpx;
+    line-height: 100rpx;
+    bottom: 100rpx;
+    right: 80rpx;
+    background-color: white;
+    border-radius: 50%;      
+    -moz-border-radius: 50%;      
+    -webkit-border-radius: 50%;
+}
+
+.add-icon {
+  position: fixed;
+  height: 80rpx;
+  width: 80rpx;
+  line-height: 100rpx;
+  bottom: 600rpx;
+  right: 80rpx;
+  background-color: white;
+  border-radius: 50%;      
+  -moz-border-radius: 50%;      
+  -webkit-border-radius: 50%;
+}
+
+.minus-icon {
+  position: fixed;
+  height: 80rpx;
+  width: 80rpx;
+  line-height: 100rpx;
+  bottom: 500rpx;
+  right: 80rpx;
+  background-color: white;
+  border-radius: 50%;      
+  -moz-border-radius: 50%;      
+  -webkit-border-radius: 50%;
+}

@@ -68,27 +68,36 @@ Page({
       onlyFromCamera: true,
       scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
       success: res => {
-        console.log(res);
-        if (res['path'] === undefined) {
+        
+        console.log(decodeURIComponent(res['result']));
+        if (res['result'] === undefined) {
           this.setData({
             showModal: true
           })
           console.log('fail');
           return;
         }
-        var path = res['path'];
-        var reg = /deviceID=(\d)+/;
-        var r = path.match(reg)
-        if (r === null) {
+        var path = decodeURIComponent(res['result']);
+        var reg1= /deviceID=(\d)+/;
+        var reg2=/device_type=[\w|\u4e00-\u9fa5|-]+/;
+        var reg3=/device_model=[\w|\u4e00-\u9fa5|-]+/;
+        var r1 = path.match(reg1);
+        var r2 = path.match(reg2);
+        var r3 = path.match(reg3);
+        console.log(r1);
+        console.log(r2);
+        console.log(r3);
+        if (r1 === null||r2===null||r3===null) {
           this.setData({
             showModal: true
           })
-          console.log('fail2');
           return;
-        }
-        var id = r[0].slice(9);
+        }       
+        var id = r1[0].slice(9);
+        var type=r2[0].slice(12);
+        var model=r3[0].slice(13);
         wx.navigateTo({
-          url: '../index/index?deviceID=' + id + '&detail=&phone=&url1=&url2=&url3=&url4='
+          url: '../index/index?deviceID=' + id+'&device_type='+type+'&device_model='+model + '&detail=&phone=&url1=&url2=&url3=&url4=&orderID='
         });
       }
     })

@@ -1,7 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp();
-
+const utils = require('../../utils/md5.js');
 Page({
   data: {
     CustomBar: app.globalData.CustomBar,
@@ -15,6 +15,7 @@ Page({
     show_error_3: false,
     show_error_4: false,
     show_error_5: false,
+    show_error_6: false,
     beReplaced: false,
     isLogin: false,
     showLogin: false,
@@ -22,18 +23,27 @@ Page({
     index: [],
     index_replace: 0,
     value: [],
-    picker: ['GTX770', 'GTX780', 'GTX970', 'GTX980', 'GTX 1060'],
-    picker_r: ['aaaa', 'bbbbb', 'cccccc'],
+    bitMap: [],
+    bMap: [],
+    picker: [],
+    picker_r: [],
     step: 'first',
     detail: '',
     phone: '',
     modalName: '',
+    upURL: '',
     is_password: true,
     eye_status: 'browse',
     error_message: '',
     show_error: false,
     phone_init: '',
     detail_init: '',
+    orderID: '',
+    device_type: '',
+    device_model: '',
+    result: '',
+    _id: '',
+    _pass: ''
   },
   handleChange({
     detail
@@ -45,8 +55,8 @@ Page({
   //事件处理函数
 
   onLoad: function (options) {
-    console.log(options);
     var lis = [];
+    var that = this;
     for (var i = 1; i < 5; ++i) {
       if (options['url' + i.toString()] != '') {
         lis.push(options['url' + i.toString()]);
@@ -58,6 +68,9 @@ Page({
       detail_init: options['detail'],
       phone: options['phone'],
       detail: options['detail'],
+      orderID: options['orderID'],
+      device_model: options['device_model'],
+      device_type: options['device_type'],
       imgList: lis
     });
     if (!app.globalData.loginStatus) {
@@ -73,13 +86,107 @@ Page({
       if (_type) {
         app.globalData.type = _type;
       }
+      var _count_id = wx.getStorageSync('count_id');
+      var _pass = wx.getStorageSync('password');
       if (app.globalData.id != '') {
-        app.globalData.loginStatus = true;
-        this.setData({
-          userID: app.globalData.id,
-          userName: app.globalData.name,
-          userType: app.globalData.type,
-          isLogin: app.globalData.loginStatus
+        wx.showLoading({
+          title: '登陆中',
+          mask: true
+        });
+        wx.request({
+          url: 'https://tjsseibm.club/api/mobile/login',
+          method: 'POST',
+          data: {
+            count_id: _count_id,
+            password: _pass
+          },
+          success(res) {
+            if (res.data['data']['id'] != null) {
+              wx.hideLoading();
+              app.globalData.name = res.data['data']['name'];
+              app.globalData.id = res.data['data']['id'];
+              app.globalData.type = res.data['data']['type'];
+              app.globalData.loginStatus = true;
+              that.setData({
+                show_error: false,
+                showLogin: false,
+                isLogin: true,
+                userName: app.globalData.name,
+                userID: app.globalData.id,
+                userType: app.globalData.type
+              });
+              if (app.globalData.type === '巡检员') {
+                wx.showLoading({
+                  title: '加载中'
+                });
+                console.log(that.data.device_type);
+                wx.request({
+                  url: 'https://tjsseibm.club/api/mobile/accessory',
+                  method: 'GET',
+                  data: {
+                    id: that.data.device
+                  },
+                  success(res) {
+                    console.log(res);
+                    that.setData({
+                      picker: res.data['data']
+                    });
+                    that.data.bMap[0] = 1;
+                    that.setData({
+                      bMap: that.data.bMap
+                    });
+                    if (that.data.bMap[0] && that.data.bMap[1]) {
+                      wx.hideLoading();
+                    }
+                  },
+                  fail() {
+                    wx.showToast({
+                      title: '获取配件列表失败',
+                      image: '../../img/err.png'
+                    })
+                  }
+                });
+                wx.request({
+                  url: 'https://tjsseibm.club/api/mobile/deviceModel',
+                  method: 'GET',
+                  data: {
+                    device_type: that.data.device_type
+                  },
+                  success(res) {
+                    console.log(res);
+                    that.setData({
+                      picker_r: res.data['data']
+                    });
+                    that.data.bMap[1] = 1;
+                    that.setData({
+                      bMap: that.data.bMap
+                    });
+                    if (that.data.bMap[0] && that.data.bMap[1]) {
+                      wx.hideLoading();
+                    }
+                  },
+                  fail() {
+                    wx.showToast({
+                      title: '获取器件列表失败',
+                      image: '../../img/err.png'
+                    })
+                  }
+                });
+              }
+            } else {
+              wx.hideLoading();
+              wx.showToast({
+                title: '账号密码错误',
+                image: '../../img/err.png'
+              })
+            }
+          },
+          fail() {
+            wx.hideLoading();
+            wx.showToast({
+              title: '因网络原因登陆失败'
+            })
+          }
         });
       } else {
         console.log('路人');
@@ -87,15 +194,73 @@ Page({
           userName: '路人',
           isLogin: app.globalData.loginStatus
         });
+
       }
     } else {
-      console.log(app.globalData)
       this.setData({
         userID: app.globalData.id,
         userName: app.globalData.name,
         userType: app.globalData.type,
         isLogin: app.globalData.loginStatus
       });
+      if (this.data.userType === '巡检员') {
+        wx.showLoading({
+          title: '加载中'
+        });
+        console.log(that.data.device_type);
+        wx.request({
+          url: 'https://tjsseibm.club/api/mobile/accessory',
+          method: 'GET',
+          data: {
+            id: that.data.device
+          },
+          success(res) {
+            console.log(res);
+            that.setData({
+              picker: res.data['data']
+            });
+            that.data.bMap[0] = 1;
+            that.setData({
+              bMap: that.data.bMap
+            });
+            if (that.data.bMap[0] && that.data.bMap[1]) {
+              wx.hideLoading();
+            }
+          },
+          fail() {
+            wx.showToast({
+              title: '获取配件列表失败',
+              image: '../../img/err.png'
+            })
+          }
+        });
+        wx.request({
+          url: 'https://tjsseibm.club/api/mobile/deviceModel',
+          method: 'GET',
+          data: {
+            device_type: that.data.device_type
+          },
+          success(res) {
+            console.log(res);
+            that.setData({
+              picker_r: res.data['data']
+            });
+            that.data.bMap[1] = 1;
+            that.setData({
+              bMap: that.data.bMap
+            });
+            if (that.data.bMap[0] && that.data.bMap[1]) {
+              wx.hideLoading();
+            }
+          },
+          fail() {
+            wx.showToast({
+              title: '获取器件列表失败',
+              image: '../../img/err.png'
+            })
+          }
+        });
+      }
     }
   },
   ChooseImage: function () {
@@ -106,13 +271,17 @@ Page({
       success: (res) => {
         if (this.data.imgList.length != 0) {
           this.setData({
-            imgList: this.data.imgList.concat(res.tempFilePaths)
-          })
+            imgList: this.data.imgList.concat(res.tempFilePaths),
+            bitMap: this.data.bitMap.concat(0)
+          });
+
         } else {
           this.setData({
-            imgList: res.tempFilePaths
+            imgList: res.tempFilePaths,
+            bitMap: [0]
           })
         }
+        console.log(this.data.bitMap);
       }
     });
     console.log(this.data.imgList);
@@ -126,8 +295,10 @@ Page({
   },
   DelImg: function (e) {
     this.data.imgList.splice(e.currentTarget.dataset.index, 1);
+    this.data.bitMap.splice(e.currentTarget.dataset.index, 1);
     this.setData({
-      imgList: this.data.imgList
+      imgList: this.data.imgList,
+      bitMap: this.data.bitMap
     });
   },
   textareaInput: function (e) {
@@ -173,7 +344,12 @@ Page({
         }
       }
     } else {
-
+      if (!this.data.index_replace) {
+        that.setData({
+          show_error_6: true
+        });
+        flag = true;
+      }
     }
     if (flag) {
       if (e.detail.value['phone'] != '') {
@@ -207,6 +383,11 @@ Page({
           show_error_5: false
         });
       }
+      if (that.data.index_replace) {
+        that.setData({
+          show_error_6: false
+        })
+      }
       that.setData({
         animation: 'shake'
       })
@@ -221,32 +402,36 @@ Page({
         show_error_2: false,
         show_error_3: false,
         show_error_4: false,
-        step: 'third'
       });
-      for (var i = 0; i < that.data.imgList.length; ++i) {
-        wx.uploadFile({
-          url: 'https://sm.ms/api/upload',
-          filePath: that.data.imgList[i],
-          name: 'smfile',
-          success: res => {
-            wx.showToast({
-              title: 'success'
+      wx.showLoading({
+        title: '上传中',
+        mask: true
+      })
+      var detail_old = that.data.detail;
+      if (that.data.userType === '巡检员') {
+        if (that.data.beReplaced) {
+          if (that.data.index_replace) {
+            that.data.detail += String.fromCharCode(30);
+            that.data.detail += that.data.picker_r[that.data.index_replace];
+            that.setData({
+              detail: that.data.detail
             });
           }
-        });
+        } else {
+          that.data.detail += String.fromCharCode(30);
+          for (var i = 0; i < that.data.index.length; ++i) {
+            that.data.detail += that.data.picker[that.data.index[i]] + ':' + that.data.value[i];
+          }
+          that.setData({
+            detail: that.data.detail
+          });
+        }
       }
-      var imgurl='';
-      for(var i=0; i<that.data.imgList.length;++i)
-      {
-        imgurl+=that.data.imgList[i]+' ';
+      console.log(that.data.detail);
+      for (var i = 0; i < that.data.imgList.length; ++i) {
+        this.Upload(that, i, e, detail_old);
       }
-      var data={
-        url: imgurl,
-        detail: that.data.detail,
-        phone: that.data.phone,
-        problemType: e.detail.value['problem_type']
-      }
-      console.log(data);
+
     }
   },
   showModal: function () {
@@ -261,6 +446,9 @@ Page({
   },
   login: function () {
     this.setData({
+      _id: '',
+      _pass: '',
+      show_error: false,
       showLogin: true
     });
   },
@@ -320,33 +508,138 @@ Page({
         })
       }, 1000);
     } else {
-      app.globalData.name = e.detail.value['id'];
-      app.globalData.id = e.detail.value['id'];
-      app.globalData.type = '维修员';
-      app.globalData.loginStatus = true;
-      that.setData({
-        show_error: false,
-        showLogin: false,
-        isLogin: true,
-        userName: e.detail.value['id'],
-        userID: e.detail.value['id'],
-        userType: '维修员'
+      wx.showLoading({
+        title: '登陆中',
+        mask: true
       });
-      wx.setStorage({
-        key: 'id',
-        data: app.globalData.id,
-        success: function (res) {
-          console.log('yes');
+      var pass = utils.hex_md5(e.detail.value['password']);
+      console.log(e.detail.value['id']);
+      wx.request({
+        url: 'https://tjsseibm.club/api/mobile/login',
+        method: 'POST',
+        data: {
+          count_id: e.detail.value['id'],
+          password: pass
+        },
+        success(res) {
+          if (res.data === "API calls quota exceeded! maximum admitted 2 per Second.") {
+            wx.hideLoading();
+            wx.showToast({
+              title: '登陆过于频繁',
+              image: '../../img/err.png'
+            });
+            return;
+          }
+          if (res.data['data']['id'] != null) {
+            app.globalData.name = res.data['data']['name'];
+            app.globalData.id = res.data['data']['id'];
+            app.globalData.type = res.data['data']['type'];
+            app.globalData.loginStatus = true;
+            that.setData({
+              show_error: false,
+              showLogin: false,
+              isLogin: true,
+              userName: app.globalData.name,
+              userID: app.globalData.id,
+              userType: app.globalData.type
+            });
+            wx.setStorage({
+              key: 'id',
+              data: app.globalData.id
+            });
+            wx.setStorage({
+              key: 'count_id',
+              data: e.detail.value['id']
+            });
+            wx.setStorage({
+              key: 'password',
+              data: pass
+            });
+            wx.setStorage({
+              key: 'name',
+              data: app.globalData.name
+            });
+            wx.setStorage({
+              key: 'type',
+              data: app.globalData.type
+            });
+            wx.hideLoading();
+            app.globalData.name = res.data['data']['name'];
+            app.globalData.id = res.data['data']['id'];
+            app.globalData.type = res.data['data']['type'];
+            app.globalData.loginStatus = true;
+            that.setData({
+              show_error: false,
+              showLogin: false,
+              isLogin: true,
+              userName: app.globalData.name,
+              userID: app.globalData.id,
+              userType: app.globalData.type
+            });
+            if (app.globalData.type === '巡检员') {
+              wx.showLoading({
+                title: '加载中'
+              });
+              console.log(that.data.device_type);
+              wx.request({
+                url: 'https://tjsseibm.club/api/mobile/accessory',
+                method: 'GET',
+                data: {
+                  id: that.data.device
+                },
+                success(res) {
+                  console.log(res);
+                  that.setData({
+                    picker: res.data['data']
+                  });
+                  that.data.bMap[0] = 1;
+                  that.setData({
+                    bMap: that.data.bMap
+                  });
+                  if (that.data.bMap[0] && that.data.bMap[1]) {
+                    wx.hideLoading();
+                  }
+                }
+              });
+              wx.request({
+                url: 'https://tjsseibm.club/api/mobile/deviceModel',
+                method: 'GET',
+                data: {
+                  device_type: that.data.device_type
+                },
+                success(res) {
+                  console.log(res);
+                  that.setData({
+                    picker_r: res.data['data']
+                  });
+                  that.data.bMap[1] = 1;
+                  that.setData({
+                    bMap: that.data.bMap
+                  });
+                  if (that.data.bMap[0] && that.data.bMap[1]) {
+                    wx.hideLoading();
+                  }
+                }
+              });
+            }
+          } else {
+            wx.hideLoading();
+            wx.showToast({
+              title: '登陆失败',
+              image: '../../img/err.png'
+            });
+          }
+
+        },
+        fail() {
+          wx.hideLoading();
+          wx.showToast({
+            title: '登陆失败',
+            image: '../../img/err.png'
+          });
         }
       });
-      wx.setStorage({
-        key: 'name',
-        data: app.globalData.name
-      });
-      wx.setStorage({
-        key: 'type',
-        data: app.globalData.type
-      });
+
     }
   },
   changeStatus: function () {
@@ -499,6 +792,76 @@ Page({
     console.log(e.detail.value);
     this.setData({
       beReplaced: e.detail.value
+    });
+  },
+  Upload: function (that, idx, e, detail_old) {
+    wx.uploadFile({
+      url: 'https://sm.ms/api/upload',
+      filePath: that.data.imgList[idx],
+      name: 'smfile',
+      success: res => {
+        console.log(res);
+        that.data.upURL += JSON.parse(res.data).data.url + ' ';
+        var b = that.data.bitMap;
+        b[idx] = 1;
+        that.setData({
+          upURL: that.data.upURL,
+          bitMap: b
+        });
+        var flag = 1;
+        for (var x = 0; x < that.data.bitMap.length; ++x) {
+          flag = flag * that.data.bitMap[x];
+        }
+        if (flag === 1) {
+          var url = (that.data.orderID === '') ? 'https://tjsseibm.club/api/mobile/postrepairOrder' : 'https://tjsseibm.club/api/mobile/putrepairOrder';
+          wx.request({
+            url: url,
+            method: 'POST',
+            data: {
+              deviceID: that.data.device,
+              imgurl: that.data.upURL,
+              detail: that.data.detail,
+              phone: that.data.phone,
+              problem_type: (that.data.userType === '巡检员') ? e.detail.value['problem_type'] : '0000',
+              status: (that.data.userType === '巡检员') ? 1 : 0,
+              id: (that.data.orderID === '') ? '0000' : that.data.orderID
+            },
+            success(res) {
+              console.log(res);
+              wx.hideLoading();
+              if (res.data['data'] === 'success') {
+                that.setData({
+                  step: 'third',
+                  result: '报修成功，感谢您的帮助'
+                });
+              } else if (res.data['data'] === 'fail2') {
+                that.setData({
+                  step: 'third',
+                  result: '感谢您的协助，该器材已经被报修过了'
+                })
+              } else {
+                wx.showToast({
+                  title: '上传失败',
+                  image: '../../img/err.png'
+                });
+                that.setData({
+                  detail: detail_old
+                });
+              }
+            },
+            fail() {
+              wx.hideLoading();
+              wx.showToast({
+                title: '上传失败',
+                image: '../../img/err.png'
+              });
+              that.setData({
+                detail: detail_old
+              });
+            }
+          })
+        }
+      }
     });
   }
 })

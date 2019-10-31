@@ -1,8 +1,17 @@
-<!--pages/map/map.wxml-->
+<!-- pages/map/map.wxml -->
 <cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
   <view slot="backText">返回</view>
   <view slot="content">地图</view>
 </cu-custom>
 <view class="empty_tip">
-<map style="width: 100%; height: 100%;" show-compass  show-location="true" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="18"/>
+  <map wx:if="{{ismarker}}" style="width: 100%; height: 100%;" show-compass show-location="true" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="{{scale}}" />
+  <cover-view class="position-icon" bind:tap="Position">
+    <cover-image src="../../img/position.png"></cover-image>
+  </cover-view>
+  <cover-view class="add-icon" bind:tap="Add">
+    <cover-image src="../../img/add.png"></cover-image>
+  </cover-view>
+  <cover-view class="minus-icon" bind:tap="Minus">
+    <cover-image src="../../img/minus.png"></cover-image>
+  </cover-view>
 </view>

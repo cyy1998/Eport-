@@ -12,8 +12,10 @@
       <open-data type="userAvatarUrl" />
     </i-avatar>
   </view>
-  <view class="margin-left-sm" wx:else class="cu-avatar round">
-    <text class="cuIcon-people"></text>
+  <view class="margin-left-sm" wx:else>
+    <i-avatar class="margin-top margin-top" size="large">
+      <text class="cuIcon-people"></text>
+    </i-avatar>
   </view>
   <view class="text-bold margin-top-sm margin-left">用户名：{{userName}}</view>
 </view>
@@ -45,14 +47,26 @@
 </view>
 <view class=" text-lg padding-sm bg-white shadow-warp">
   <i-row>
-    <i-col span="8"><text class="text-black text-bold">设备编号：</text></i-col>
-    <i-col span="8"><text class="text-black text-bold">设备类型：</text></i-col>
-    <i-col span="8"><text class="text-black text-bold">设备型号：</text></i-col>
+    <i-col span="8">
+      <text class="text-black text-bold">设备编号：</text>
+    </i-col>
+    <i-col span="8">
+      <text class="text-black text-bold">设备类型：</text>
+    </i-col>
+    <i-col span="8">
+      <text class="text-black text-bold">设备型号：</text>
+    </i-col>
   </i-row>
   <i-row>
-    <i-col span="8"><text class="text-black text-bold">{{device}}</text></i-col>
-    <i-col span="8"><text class="text-black text-bold">跑步机</text></i-col>
-    <i-col span="8"><text class="text-black text-bold">1000000000</text></i-col>
+    <i-col span="8">
+      <text class="text-black text-bold">{{device}}</text>
+    </i-col>
+    <i-col span="8">
+      <text class="text-black text-bold">{{device_type}}</text>
+    </i-col>
+    <i-col span="8">
+      <text class="text-black text-bold">{{device_model}}</text>
+    </i-col>
   </i-row>
 </view>
 <form bind:submit="formSubmit">
@@ -173,6 +187,13 @@
     </view>
     <view class=" text-l padding-sm" wx:else>
       <text class="text-gray text-bold">更换器件型号：</text>
+      <i-row wx:if="{{show_error_6}}">
+        <i-col span="24">
+          <view class="text-sm padding-tb-sm">
+            <text class="text-red text-shadow">替换器件型号不能为空</text>
+          </view>
+        </i-col>
+      </i-row>
       <view class="cu-list menu margin-top-sm card-menu">
         <view class="cu-item cu-form-group">
           <picker name='picker_replace' bind:change="PickerChange2" value="{{index_replace}}" range="{{picker_r}}">
@@ -201,7 +222,7 @@
   <view class="text-xsl text-center margin-tb-xl">
     <text class="cuIcon-roundcheckfill text-green"></text>
   </view>
-  <view class="text-xxl text-center text-gray">报修成功，感谢您的帮助</view>
+  <view class="text-xxl text-center text-gray">{{result}}</view>
   <button class="cu-btn bg-green round lg margin-top" bind:tap="goBack">确认</button>
 </view>
 <view class="cu-modal {{showLogin?'show':''}}">
@@ -218,12 +239,12 @@
           <text class="text-red text-shadow">{{error_message}}</text>
         </view>
         <view class="cu-form-group solid-bottom" style="text-align: left;">
-          <input placeholder="账号" name="id" />
+          <input placeholder="账号" value="{{_id}}" name="id" />
         </view>
         <i-row>
           <i-col span="24">
             <view class="cu-form-group solids-bottom " style="text-align: left;">
-              <input placeholder="密码" name="password" password="{{is_password}}" />
+              <input placeholder="密码" value="{{_pass}}" name="password" password="{{is_password}}" />
               <i-icon type="{{eye_status}}" size="24" bind:tap="changeStatus" />
             </view>
           </i-col>

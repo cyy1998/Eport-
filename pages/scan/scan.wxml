@@ -20,12 +20,12 @@
 <view class="cu-modal {{showModal?'show':''}}">
     <view class="cu-dialog">
         <view class="cu-bar bg-white justify-end">
-            <view class="content">错误</view>
+            <view class="content text-bold text-red">错误</view>
             <view class="action" bind:tap="hideModal">
                 <text class="cuIcon-close text-red"></text>
             </view>
         </view>
-        <view class="padding-sm" style="text-align: left">请扫描设备提供的二维码</view>
+        <view class="padding text-center">请扫描设备提供的二维码</view>
         <view class="cu-bar bg-white justify-end">            
             <view class="action">
                 <button class="cu-btn bg-green margin-left" bind:tap="hideModal">确定</button>
